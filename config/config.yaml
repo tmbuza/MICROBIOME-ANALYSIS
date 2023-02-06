@@ -1,0 +1,5 @@
+# Path to SRA metadata sheet (CSV, TSV format).
+# Columns starts with Run,Assay Type,AvgSpotLen,Bases,BioProject,BioSample,etc.
+# We assume the table name is the orinal but with CSV extension (default is TXT)
+srameta: data/metadata/SraRunTable.csv
+

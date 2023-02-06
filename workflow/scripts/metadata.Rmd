@@ -1,0 +1,29 @@
+<!-- # General Overview -->
+## What is metadata?
+* <b>Metadata</b> is a set of data that describes and provides information about other data. It is commonly defined as **data about data**.
+* **Sample metadata** described in this book refers to the description and context of the individual sample collected for a specific microbiome study.
+
+## Metadata structure
+* Metadata collected at different stages (Figure 1) are typically organized in an Excel or Google spreadsheet where:
+  * The metadata table columns represent the properties of the samples.
+  * The metadata table rows contain information associated with the samples.
+  * Typically, the first column of sample metadata is Sample ID, which designates the key associated to individual sample
+  * Sampl ID must be unique.
+
+## Embedded metadata
+* In most cases, you will find the metadata detached from the experimental data.
+* Embedded metadata integrates the experimental data especially for graphics.
+* Major microbiome analysis platforms require sample metadata, commonly referred to as **mapping file** when performing downstream analysis.
+
+
+## Downloading metadata from NCBI-SRA
+Typically, after sequencing the microbiome DNA, the investigators are encouraged to deposit the sequence reads in a public repository. The Sequence Read Archive (SRA) is currently the best bioinformatics database for read information. The good thing about SRA is that it integrates data from the NCBI, the European Bioinformatics Institute (EBI), and the DNA Data Bank of Japan (DDBJ). 
+
+<br><br>
+
+## Sample distribution
+This demo uses metadata associated with the bushmeat microbiome bioproject number [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra?linkname=bioproject_sra_all&from_uid=477349).
+The metadata and the `run` accessions are available via the [SRA database](https://www.ncbi.nlm.nih.gov/Traces/study/?WebEnv=MCID_63d94ddd2805b915ba189567&query_key=1&GALAXY_URL=https%3A%2F%2Fusegalaxy.org%2Ftool_runner%3Ftool_id%3Dsra_source).
+
+
+

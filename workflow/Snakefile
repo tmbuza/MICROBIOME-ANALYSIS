@@ -1,0 +1,111 @@
+from snakemake.utils import min_version
+
+min_version("6.10.0")
+
+
+# Configuration file containing all user-specified settings
+configfile: "config/config.yaml"
+
+
+# Master rule for controlling workflow.
+rule all:
+    input:
+        "index.html",
+        "project_tree.txt",
+        "data/metadata/metadata.csv",
+        "data/metadata/read_size_asce.csv",
+        "data/metadata/read_size_desc.csv",
+        "images/variable_freq.png",
+        "images/variable_freq.svg",
+        "images/sample_gps.png",
+        "images/smkreport/screenshot.png",  
+        # expand("{outdir}/{accession}_1.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+        # expand("{outdir}/{accession}_2.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+
+
+# Get tidy metadata
+rule get_sra_metadata:
+    output:
+        csv="data/metadata/metadata.csv"
+    script:
+        "scripts/sra_metadata.R"
+        
+
+# Get variable barplot
+rule plot_variable_freq:
+    input:
+        csv=rules.get_sra_metadata.output.csv
+    output:
+        png="images/variable_freq.png",
+        svg="images/variable_freq.svg"
+    script:
+        "scripts/plot_var_freq.R"
+
+
+# Get read size
+rule explore_read_size:
+    input:
+        csv=rules.get_sra_metadata.output.csv
+    output:
+        asce="data/metadata/read_size_asce.csv",
+        desc="data/metadata/read_size_desc.csv"
+    script:
+        "scripts/explore_read_size.R"
+      
+
+# Get sample location 
+rule get_sample_gps:
+    input:
+        csv=rules.get_sra_metadata.output.csv
+    output:
+        map="images/sample_gps.png"
+    script:
+        "scripts/get_sample_gps.R"
+
+# Get directory tree
+rule get_project_tree_txt:
+    output:
+        tree="project_tree.txt"
+    shell:
+        """
+        bash workflow/scripts/tree.sh
+        """
+
+# Get rule graphs
+rule get_rulegraph:
+    output:
+        "dags/rulegraph.svg",
+    shell:
+        """
+        bash workflow/scripts/rules_dag.sh
+        """
+
+# Get smk html report
+rule snakemake_html_report:
+    shell:
+        """
+        bash workflow/scripts/smk_html_report.sh
+        """
+
+
+# Create a shareabke html report
+rule github_page_index:
+    input:
+        script="workflow/scripts/render.R",
+        rmd="index.Rmd",
+        rulegraph="dags/rulegraph.svg",
+        dag=rules.plot_variable_freq.output,
+        map=rules.get_sample_gps.output,
+        html2png="images/smkreport/screenshot.png",
+        # tree=rules.get_project_tree_txt.output,
+        # asce=rules.explore_read_size.output.asce,
+        # desc=rules.explore_read_size.output.desc,
+    output:
+        doc="index.html",
+    shell:
+        """
+        R -e "library(rmarkdown); render('{input.rmd}')"
+        """
+
+
+
