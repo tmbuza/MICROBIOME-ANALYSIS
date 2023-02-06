@@ -1,2 +1,1 @@
-# sra-metadata
-Sample Metadata Exploration and Profiling
+# Sample Metadata Exploration and Profiling
