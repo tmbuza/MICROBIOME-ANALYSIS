@@ -2,7 +2,7 @@
 title:  "<big>MICROBIOME DATA INSIGHTS</big><br><br>Integrated Microbiome Analysis Pipelines (IMAP)<br><br>"
 subtitle: |
   | ![](images/cicd.png)<br>
-  | <u><big><big>IMAP-PART 1</big></big></u><br><br>How to get started with Microbiome data analysis<br><br>
+  | <u><big><big>IMAP-PART 1</big></big></u><br><br>The Basic Requirement for Microbiome Data Analysis<br><br>
 date: |
   |  Updated on `r Sys.Date()` <br>
 author: Teresia Mrema-Buza
@@ -15,8 +15,8 @@ link-citations: true
 mainfont:
 biblio-style: apalike
 email_address: "tmbuza@complexdatainsights.com"
-github_repo: "https://github.com/tmbuza/explore-sra-metadata"
-github_page: "https://tmbuza.github.io/explore-sra-metadata/"
+github_repo: "https://github.com/tmbuza/microbiome-analysis"
+github_page: "https://tmbuza.github.io/microbiome-analysis/"
 related_website: "https://complexdatainsights.com"
 description: |
   This repo provides integrated and highly curated solutions for reproducible research.
@@ -108,7 +108,7 @@ library(schtools)
 
 ### Read ascending size
 ```{r}
-read_csv("data/metadata/read_size_asce.csv", show_col_types = FALSE) %>%
+read_csv("results/read_size_asce.csv", show_col_types = FALSE) %>%
 head()
 ```
 
@@ -117,7 +117,7 @@ head()
 
 ### Read descending size
 ```{r}
-read_csv("data/metadata/read_size_desc.csv", show_col_types = FALSE) %>%
+read_csv("results/read_size_desc.csv", show_col_types = FALSE) %>%
 head()
 ```
 
@@ -135,7 +135,7 @@ head()
 
 ## Project directories {#dirs}
 ```{bash}
-cat project_tree.txt
+cat images/project_tree.txt
 ```
 
 <br><br>

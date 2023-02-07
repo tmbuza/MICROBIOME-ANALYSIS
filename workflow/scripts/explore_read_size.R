@@ -11,7 +11,7 @@ metadata %>%
   summarise(milionbases = sum(milionbases), .groups = "drop") %>% 
   arrange(milionbases) %>% 
   head() %>% 
-  write_csv("data/metadata/read_size_asce.csv")
+  write_csv("results/read_size_asce.csv")
 
 
 metadata %>% 
@@ -20,4 +20,4 @@ metadata %>%
   summarise(milionbases = sum(milionbases), .groups = "drop") %>% 
   arrange(-milionbases) %>% 
   head() %>% 
-  write_csv("data/metadata/read_size_desc.csv")
+  write_csv("results/read_size_desc.csv")
