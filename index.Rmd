@@ -2,7 +2,7 @@
 title:  "<big>MICROBIOME DATA INSIGHTS</big><br><br>Integrated Microbiome Analysis Pipelines (IMAP)<br><br>"
 subtitle: |
   | ![](images/cicd.png)<br>
-  | <u><big><big>IMAP-PART 1</big></big></u><br><br>The Basic Requirement for Microbiome Data Analysis<br><br>
+  | <u><big><big>IMAP-PART 1</big></big></u><br><br>The Basic Requirements for Microbiome Data Analysis<br><br>
 date: |
   |  Updated on `r Sys.Date()` <br>
 author: Teresia Mrema-Buza
