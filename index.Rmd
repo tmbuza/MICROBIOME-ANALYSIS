@@ -104,7 +104,7 @@ library(schtools)
 
 <br><hr width=50%><br>
 
-# Preprocessing Tools
+# Quality Control Tools
 
 ```{r child='workflow/scripts/preprocess_tools.Rmd'}
 ```
@@ -195,13 +195,13 @@ cat images/project_tree.txt
 </ol>
 
 
-
+<br><br><hr width=50%><br>
 
 ## References
 ::: {#refs}
 :::
 
-<br><br><hr width=50%><br>
+<br><br><hr width=100%><br>
 
 <div id="footer">
 Last updated on `r format(Sys.time(), '%B %d, %Y')`. <br><br>

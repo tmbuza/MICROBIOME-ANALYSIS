@@ -40,12 +40,12 @@
 } 
 
 .date{
-  color: #000000;
+  color: #040330;
   font-family: "Roboto", sans-serif;
   font-weight: normal:
 }
 #header {
-  background-color: none;
+  background-color: linear-gradient(to bottom, rgb(213, 255, 89), rgba(255, 122, 89,0));
   color: black;
   font-family: "Montserrat", sans-serif;
   text-align: center;
@@ -53,7 +53,7 @@
   padding: 5%;
   text-transform: none;
   font-weight: bold;
-  background-image: url("../../images/bkgd1.png");
+  background-image: url("images/bkgd1.png");
   /* background-image: url("../images/bkgd2.png"); */
   background-repeat: no-repeat;
   height: 100%; /* You must set a specified height */
