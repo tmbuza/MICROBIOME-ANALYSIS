@@ -13,7 +13,19 @@
 #header .title big {
   font-size: 1.5em;
   text-transform: capitalize;
-  color: black;
+  color: #004400;
+  font-family: "Anton", sans-serif;
+} 
+#header .subtitle{
+  font-size: 2em;
+  text-transform: normal;
+  color: #000000;
+  font-family: "Roboto", sans-serif;
+} 
+#header .subtitle big {
+  font-size: 1.5em;
+  text-decoration: underline;
+  color: #004400;
   font-family: "Anton", sans-serif;
 } 
 #header h1{
@@ -22,20 +34,14 @@
   color: #1a1a1a;
   font-family: "Anton", sans-serif;
 }
-#header .subtitle{
-  font-size: 1.5em;
-  text-transform: capitalize;
-  color: #004400;
-  font-family: "Anton", sans-serif;
-} 
 
 .author{
   display: none;
 } 
 
 .date{
-  color: #004400;
-  font-family: "Anton", sans-serif;
+  color: #000000;
+  font-family: "Roboto", sans-serif;
   font-weight: normal:
 }
 #header {
@@ -61,14 +67,6 @@ body h1{
   text-transform: capitalize;
   font-family: "Anton", sans-serif;
 }
-#header h3{
-  font-size: 1.8em;
-  color: black;
-  text-transform: capitalize;
-} 
-#header img{
-width:75%;
-}
 
 /* ############
 # BODY CSS
@@ -79,17 +77,21 @@ table tbody tr td {
   text-transform: capitalize;
 }
 body img{
-    width: 80%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white;
+  width: 80%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+}
+#header img{
+  width:80%;
+  background: linear-gradient(to bottom, rgb(213, 255, 89), rgba(255, 122, 89,0));
 }
 blockquote {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 16px;
-    border-left: 5px solid #eee;
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 16px;
+  border-left: 5px solid #eee;
 }
 
 a{

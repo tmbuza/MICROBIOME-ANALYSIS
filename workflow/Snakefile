@@ -2,25 +2,43 @@ from snakemake.utils import min_version
 
 min_version("6.10.0")
 
-
 # Configuration file containing all user-specified settings
 configfile: "config/config.yaml"
+
+mothurSamples = list(set(glob_wildcards(os.path.join('data/mothur/reads/', '{sample}_{readNum, R[12]}_001.fastq.gz')).sample))
+
+sraSamples = list(set(glob_wildcards(os.path.join('data/reads/', '{sample}_{sraNum, [12]}.fastq.gz')).sample))
+
+
+import os
+import csv
+import pandas as pd
+
+METADATA=pd.read_csv('data/metadata/SraRunTable.csv').loc[0:1]
+ACCESSIONS=METADATA['Run'].tolist() # Specify the column containing the accession, in this demo is Run
+OUTDIR="data/reads" 
+if not os.path.exists(OUTDIR):
+   os.makedirs(OUTDIR)
+
+
 
 
 # Master rule for controlling workflow.
 rule all:
     input:
         "index.html",
-        "images/project_tree.txt",
-        "data/metadata/metadata.csv",
-        "results/read_size_asce.csv",
-        "results/read_size_desc.csv",
-        "images/variable_freq.png",
-        "images/variable_freq.svg",
-        "images/sample_gps.png",
-        "images/smkreport/screenshot.png",  
-        # expand("{outdir}/{accession}_1.fastq", outdir=OUTDIR, accession=ACCESSIONS),
-        # expand("{outdir}/{accession}_2.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+        # "images/project_tree.txt",
+        # "data/metadata/metadata.csv",
+        # "results/read_size_asce.csv",
+        # "results/read_size_desc.csv",
+        # "images/variable_freq.png",
+        # "images/variable_freq.svg",
+        # "images/sample_gps.png",
+        # "images/smkreport/screenshot.png",  
+        expand("{outdir}/{accession}_1.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+        expand("{outdir}/{accession}_2.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+        # "results/mothur_mapping_file.tsv",
+        # "results/mothur_design_file.tsv"
 
 
 # Get tidy metadata
@@ -62,14 +80,7 @@ rule get_sample_gps:
     script:
         "scripts/get_sample_gps.R"
 
-# Get directory tree
-rule get_project_tree_txt:
-    output:
-        tree="images/project_tree.txt"
-    shell:
-        """
-        bash workflow/scripts/tree.sh
-        """
+
 
 # Get rule graphs
 rule get_rulegraph:
@@ -87,6 +98,63 @@ rule snakemake_html_report:
         bash workflow/scripts/smk_html_report.sh
         """
 
+# Get directory tree
+rule get_project_tree_txt:
+    output:
+        tree="images/project_tree.txt"
+    shell:
+        """
+        bash workflow/scripts/tree.sh
+        """
+
+
+# Dowload the SRA RUN reads
+rule download_sra_reads: 
+    input:
+        acc=rules.process_metadata.output.csv
+    output:
+        "{outdir}/{accession}_1.fastq",
+        "{outdir}/{accession}_2.fastq"
+    params:
+        download_folder=OUTDIR,
+    threads: 1
+    shell:
+        """
+        fasterq-dump {wildcards.accession} -O {params.download_folder} --threads {threads}
+        """
+
+rule get_simple_stats:
+    input:
+        script="workflow/scripts/seqkit_stat_1.sh",
+        rawreads=expand("{outdir}/{accession}_{sraNum}.fastq", outdir=OUTDIR, accession=ACCESSIONS, sraNum=config["sraNum"]),
+    output:
+        seqkit1="results/stats1/seqkit_stats.txt",
+    threads: 1
+    shell:
+      "bash {input.script}"
+
+
+rule mothur_mapping_file:
+    input:
+        stats1="results/stats1/seqkit_stats.txt"
+    output:
+        files="data/metadata/mothur_mapping_file.tsv",
+    threads: 1
+    script:
+      "scripts/mothur_mapping_file.R"
+
+
+
+rule mothur_design_file:
+    input:
+        files="data/metadata/mothur_mapping_file.tsv",
+    output:
+        files="data/metadata/mothur_design_file.tsv",
+    threads: 1
+    script:
+      "scripts/mothur_design_file.R"
+
+
 
 rule github_page_index:
     input:
@@ -99,10 +167,11 @@ rule github_page_index:
         tree="images/project_tree.txt",
         asce="results/read_size_asce.csv",
         desc="results/read_size_desc.csv",
+        mapfiles="data/metadata/mothur_mapping_file.tsv",
+        design="data/metadata/mothur_design_file.tsv"
     output:
         doc="index.html",
     shell:
         """
         R -e "library(rmarkdown); render('{input.rmd}')"
         """
-        

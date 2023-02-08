@@ -1,8 +1,8 @@
 ---
-title:  "<big>MICROBIOME DATA INSIGHTS</big><br><br>Integrated Microbiome Analysis Pipelines (IMAP)<br><br>"
+title:  "<big>MICROBIOME DATA INSIGHTS</big><br><br>Integrated Microbiome Analysis Pipelines<br>(IMAP)<br><br>"
 subtitle: |
-  | ![](images/cicd.png)<br>
-  | <u><big><big>IMAP-PART 1</big></big></u><br><br>The Basic Requirements for Microbiome Data Analysis<br><br>
+  | ![](images/planning.png)<br>
+  | <big>IMAP-PART 1</big><br>Preparing for Microbiome Data Analysis<br><br>
 date: |
   |  Updated on `r Sys.Date()` <br>
 author: Teresia Mrema-Buza
@@ -53,7 +53,15 @@ library(schtools)
 
 ```
 
-# General Overview
+# Basic requirements
+
+<br>
+
+<img src="images/imap-part1.png">
+
+<br>
+
+## General Overview
 
 - We use the snakemake workflow management system [@Koster2021; @Snakemake2023] for:
   - Maintaining reproducibility in technical validation and regeneration of results
@@ -68,12 +76,6 @@ library(schtools)
 > We envision to keep fostering on continuous integration and development of highly reproducible workflows.
 
 
-<br><hr width=50%><br>
-
-# Basic requirements
-
-<img src="images/imap-part1.png">
-
 <br><br>
 
 ## Snakemake rule DAG
@@ -81,57 +83,79 @@ library(schtools)
 <br><br>
 
 ## Screenshot of interactive snakemake report {#smkreport}
-> Open the snakemake html report using a compartible browser such as chrome to explore more on the workflow and the associated statistics. You will be able to close the left bar to get a better view of the dispaly.
+> The snakemake html report can be viewed using any compartible browser such as chrome to explore more on the workflow and the associated statistics. You will be able to close the left bar to get a better view of the dispaly.
 
 <img src="images/smkreport/screenshot.png">
 
 <br><hr width=50%><br>
 
-# Basic Software
-```{r child='workflow/scripts/software.Rmd'}
-```
 
-<br><hr width=50%><br>
-
-# Sample Metadata Exploration & Profiling
+# Sample Metadata
 ![](images/metadata.png)
 
 ```{r child='workflow/scripts/metadata.Rmd'}
 ```
 
-<br><br>
+<br><hr width=50%><br>
 
-## Read count distribution
-<img src="images/variable_freq.svg">
-
-<br>
-
-### Read ascending size
-```{r}
-read_csv("results/read_size_asce.csv", show_col_types = FALSE) %>%
-head()
+# Analysis Software
+```{r child='workflow/scripts/software.Rmd'}
 ```
 
-<br><br>
+<br><hr width=50%><br>
 
+# Preprocessing Tools
 
-### Read descending size
-```{r}
-read_csv("results/read_size_desc.csv", show_col_types = FALSE) %>%
-head()
+```{r child='workflow/scripts/preprocess_tools.Rmd'}
 ```
 
-<br><br>
+<br><hr width=50%><br>
 
-## Collection points on map
-> Does the metadata contains latitudes and longitudes of the collection point? consider dropping a pin on exact location.
+# Sequencing Data
 
-<img src="images/sample_gps.png">
+```{r child='workflow/scripts/sequencing_data.Rmd'}
+```
+
+<br><hr width=50%><br>
+
+# Bioinformatics Pipelines
+
+```{r child='workflow/scripts/bioinfo_pipelines.Rmd'}
+```
+<br><hr width=50%><br>
+
+# Mapping Files
+## Sample mapping files
+```{r child='workflow/scripts/mapping_files.Rmd'}
+```
 
 <br><hr width=50%><br><br>
 
+```{r}
+source("workflow/scripts/mothur_mapping_file.R")
+read_tsv("data/metadata/mothur_mapping_file.tsv", show_col_types = F) %>% 
+head()
+ 
+```
+
+## Design file for `mothur` prelim analysis
+- Mothur pipeline expects the design (metadata) file to have column headers. 
+- We will extract only the desired number of samples.
+- The first column header should be **group**.
+- For more detail see Mothur [MiSeq SOP](https://mothur.org/wiki/miseq_sop/).
+
+```{r}
+source("workflow/scripts/mothur_design_file.R")
+read_tsv("data/metadata/mothur_design_file.tsv", show_col_types = F) %>% 
+head()
+```
+<br><hr width=50%><br><br>
+
+<!-- ################################################### -->
 # Appendix
-<br><br>
+<!-- ################################################### -->
+
+<br>
 
 ## Project directories {#dirs}
 ```{bash}
@@ -145,11 +169,17 @@ cat images/project_tree.txt
   <li>CiteprocXMLError: Missing root element</li>
     <ul>
       <li>Maybe the CSL file is empty. Some examples of citation style language are available on Github [@CSL2023].</li>
+      <li></li>
+    </ul>
+  <li>Error from srapath: Error: RC(rcNS,rcNoTarg,rcValidating,rcConnection,rcNotFound)</li>
+    <ul>
+      <li>This happened when downloading SRA reads from online and it seems to e related connection. Not clear what causes this error but keeping retrying sometimes helps.</li>
+      <li>Use alternative method such as SRAToolkits.</li>
     </ul>
 </ol>
 
 
-<br><hr width=50%><br><br>
+
 
 ## References
 ::: {#refs}
