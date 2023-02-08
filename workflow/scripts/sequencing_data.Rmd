@@ -15,7 +15,9 @@ Read sequencing data may be obtained from different sources. The most common one
 ## How to resize Fastq Files
 - Sometimes we want to extract a small subset to test the bioinformatics pipeline.
 - You can resize the fastq files using the `seqkit sample` function [@seqkit2022].
-- Below is a quick demo for extracting only 0.1% of paired-end metagenomics sequencing data.
+- Below is a quick demo for extracting only 1% of the paired-end metagenomics sequencing data.
+
+> This example extract 1% of the reads in only two sample (SRR10245277 & SRR10245278)
 
 ```bash
 mkdir -p data

@@ -53,7 +53,7 @@
   padding: 5%;
   text-transform: none;
   font-weight: bold;
-  background-image: url("images/bkgd1.png");
+  /* background-image: url("images/bkgd1.png"); */
   background-image: url("images/bkgd2.png");
   background-repeat: no-repeat;
   height: 100%; /* You must set a specified height */

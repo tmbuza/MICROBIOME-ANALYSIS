@@ -14,7 +14,10 @@ dags/dag.svg
 dags/dag.png
 results/*
 # dags/*.
-images/*
+images/
+!images/bkgd.png
+!images/bkgd1.png
+!images/bkgd2.png
 figures/*
 report/*
 .snakemake

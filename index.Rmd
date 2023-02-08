@@ -189,8 +189,8 @@ cat images/project_tree.txt
     </ul>
   <li>Error from srapath: Error: RC(rcNS,rcNoTarg,rcValidating,rcConnection,rcNotFound)</li>
     <ul>
-      <li>This happened when downloading SRA reads from online and it seems to e related connection. Not clear what causes this error but keeping retrying sometimes helps.</li>
-      <li>Use alternative method such as SRAToolkits.</li>
+      <li>This happened when downloading SRA reads from online and it seems to be related to connection issues. Not clear what causes this error but keeping retrying sometimes helps.</li>
+      <li>Alternatively, you can download the data using the NCBI-SraToolkits (fasterq-dump is the fastest).</li>
     </ul>
 </ol>
 
