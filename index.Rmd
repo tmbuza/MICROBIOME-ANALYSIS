@@ -122,14 +122,21 @@ library(schtools)
 
 ```{r child='workflow/scripts/bioinfo_pipelines.Rmd'}
 ```
+
 <br><hr width=50%><br>
 
 # Mapping Files
-## Sample mapping files
-```{r child='workflow/scripts/mapping_files.Rmd'}
-```
 
-<br><hr width=50%><br><br>
+<!-- ```{r child='workflow/scripts/mapping_files.Rmd'}``` -->
+
+## Mothur sample mapping file
+The mapping files are required to direct the pipeline where to look for the files containing the sequencing data.
+
+- The format of the mapping files for `mothur` and `QIIME2` pipelines is slightly different. 
+- We will demonstrate how to prepare both.
+- Each mapping file will contain only the files that are parsed by bioinformatics analysis. 
+
+<br>
 
 ```{r}
 source("workflow/scripts/mothur_mapping_file.R")
@@ -138,7 +145,9 @@ head()
  
 ```
 
-## Design file for `mothur` prelim analysis
+<br>
+
+## Mothur design file
 - Mothur pipeline expects the design (metadata) file to have column headers. 
 - We will extract only the desired number of samples.
 - The first column header should be **group**.
@@ -149,6 +158,13 @@ source("workflow/scripts/mothur_design_file.R")
 read_tsv("data/metadata/mothur_design_file.tsv", show_col_types = F) %>% 
 head()
 ```
+
+
+
+
+
+
+
 <br><hr width=50%><br><br>
 
 <!-- ################################################### -->
