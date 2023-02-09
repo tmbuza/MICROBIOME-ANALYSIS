@@ -26,7 +26,7 @@ TESTDIR="data/reads/test"
 rule all:
     input:
         "index.html",
-        # "images/project_tree.txt",
+        "images/project_tree.txt",
         # "data/metadata/metadata.csv",
         # "results/read_size_asce.csv",
         # "results/read_size_desc.csv",
@@ -99,16 +99,6 @@ rule snakemake_html_report:
         bash workflow/scripts/smk_html_report.sh
         """
 
-# Get directory tree
-rule get_project_tree_txt:
-    output:
-        tree="images/project_tree.txt"
-    shell:
-        """
-        bash workflow/scripts/tree.sh
-        """
-
-
 # Dowload the SRA RUN reads
 rule download_sra_reads: 
     input:
@@ -137,9 +127,6 @@ rule resize_test_subset:
         """
         bash workflow/scripts/resize_test_subset.sh
         """
-
-
-
 
 
 rule get_simple_stats:
@@ -174,6 +161,14 @@ rule mothur_design_file:
       "scripts/mothur_design_file.R"
 
 
+# Get directory tree
+rule get_project_tree_txt:
+    output:
+        tree="images/project_tree.txt"
+    shell:
+        """
+        bash workflow/scripts/tree.sh
+        """
 
 rule github_page_index:
     input:

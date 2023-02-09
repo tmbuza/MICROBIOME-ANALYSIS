@@ -16,3 +16,4 @@ for i in {77..78};
     | seqkit sample -p 0.01 \
     | seqkit shuffle -o "${OUTDIR}"/SRR102452$i\_2_sub.fastq;
   done
+
