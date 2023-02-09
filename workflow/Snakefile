@@ -20,8 +20,7 @@ OUTDIR="data/reads"
 if not os.path.exists(OUTDIR):
    os.makedirs(OUTDIR)
 
-
-
+TESTDIR="data/reads/test"
 
 # Master rule for controlling workflow.
 rule all:
@@ -37,6 +36,8 @@ rule all:
         # "images/smkreport/screenshot.png",  
         expand("{outdir}/{accession}_1.fastq", outdir=OUTDIR, accession=ACCESSIONS),
         expand("{outdir}/{accession}_2.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+        expand("{testdir}/{accession}_1_sub.fastq", testdir=TESTDIR, accession=ACCESSIONS),
+        expand("{testdir}/{accession}_2_sub.fastq", testdir=TESTDIR, accession=ACCESSIONS),
         # "results/mothur_mapping_file.tsv",
         # "results/mothur_design_file.tsv"
 
@@ -122,6 +123,24 @@ rule download_sra_reads:
         """
         fasterq-dump {wildcards.accession} -O {params.download_folder} --threads {threads}
         """
+
+# Subset a test data
+rule resize_test_subset:
+    input:
+        expand("{outdir}/{accession}_1.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+        expand("{outdir}/{accession}_2.fastq", outdir=OUTDIR, accession=ACCESSIONS),
+    output:
+        "{testdir}/{accession}_1_sub.fastq",
+        "{testdir}/{accession}_2_sub.fastq",
+    threads: 1
+    shell:
+        """
+        bash workflow/scripts/resize_test_subset.sh
+        """
+
+
+
+
 
 rule get_simple_stats:
     input:

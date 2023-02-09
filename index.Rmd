@@ -4,7 +4,7 @@ subtitle: |
   | ![](images/planning.png)<br>
   | <big>IMAP-PART 1</big><br>Preparing for Microbiome Data Analysis<br><br>
 date: |
-  |  Updated on `r Sys.Date()` <br>
+  |  Updated on `r Sys.time()` <br>
 author: Teresia Mrema-Buza
 output: 
   html_document: 
