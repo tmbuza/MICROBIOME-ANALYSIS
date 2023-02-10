@@ -14,7 +14,7 @@ import os
 import csv
 import pandas as pd
 
-METADATA=pd.read_csv('data/metadata/SraRunTable.csv').loc[0:1]
+METADATA=pd.read_csv('data/metadata/SraRunTable_bushmeat.csv').loc[0:1]
 ACCESSIONS=METADATA['Run'].tolist() # Specify the column containing the accession, in this demo is Run
 OUTDIR="data/reads" 
 if not os.path.exists(OUTDIR):
@@ -27,11 +27,13 @@ rule all:
     input:
         "index.html",
         "images/project_tree.txt",
-        # "data/metadata/metadata.csv",
+        # "data/metadata/bushmeat.csv",
+        # "data/metadata/ibd.csv",
         # "results/read_size_asce.csv",
         # "results/read_size_desc.csv",
         # "images/variable_freq.png",
-        # "images/variable_freq.svg",
+        "images/bush_variable_freq.svg",
+        "images/ibd_variable_freq.svg",
         # "images/sample_gps.png",
         # "images/smkreport/screenshot.png",  
         expand("{outdir}/{accession}_1.fastq", outdir=OUTDIR, accession=ACCESSIONS),
@@ -43,20 +45,21 @@ rule all:
 
 
 # Get tidy metadata
-rule process_metadata:
+rule process_sra_metadata:
     output:
-        csv="data/metadata/metadata.csv"
+        bushcsv="data/metadata/bushmeat.csv",
+        ibdcsv="data/metadata/ibd.csv"
     script:
-        "scripts/sra_metadata.R"
+        "scripts/process_sra_metadata.R"
         
 
 # Get variable barplot
 rule plot_variable_freq:
     input:
-        csv=rules.process_metadata.output.csv
+        rules.process_sra_metadata.output.bushcsv
     output:
-        png="images/variable_freq.png",
-        svg="images/variable_freq.svg"
+        png="images/bush_variable_freq.svg",
+        svg="images/ibd_variable_freq.svg"
     script:
         "scripts/plot_var_freq.R"
 
@@ -64,7 +67,7 @@ rule plot_variable_freq:
 # Get read size
 rule explore_read_size:
     input:
-        csv=rules.process_metadata.output.csv
+        rules.process_sra_metadata.output.bushcsv
     output:
         asce="results/read_size_asce.csv",
         desc="results/read_size_desc.csv"
@@ -75,7 +78,7 @@ rule explore_read_size:
 # Get sample location 
 rule get_sample_gps:
     input:
-        csv=rules.process_metadata.output.csv
+        rules.process_sra_metadata.output.bushcsv
     output:
         map="images/sample_gps.png"
     script:
@@ -102,7 +105,7 @@ rule snakemake_html_report:
 # Dowload the SRA RUN reads
 rule download_sra_reads: 
     input:
-        acc=rules.process_metadata.output.csv
+        rules.process_sra_metadata.output.bushcsv
     output:
         "{outdir}/{accession}_1.fastq",
         "{outdir}/{accession}_2.fastq"

@@ -46,8 +46,6 @@
 ## Explore the metadata
 At this stage you will be able to select and decide what to include in the downstream analyses. 
 
-### Read count distribution
-![Bar chart depicting variables against read counts.](images/variable_freq.svg)
 
 <br><br>
 

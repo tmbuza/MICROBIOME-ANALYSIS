@@ -96,6 +96,18 @@ library(schtools)
 ```{r child='workflow/scripts/metadata.Rmd'}
 ```
 
+### Read count distribution
+
+**Example 1: Bushmeat project**
+
+![Bar chart depicting variables against read counts in bushmeat project.](images/bush_variable_freq.svg)
+
+<br>
+
+**Example 2: IBD project**
+
+![Bar chart depicting variables against read counts in IBD project.](images/ibd_variable_freq.svg)
+
 <br><hr width=50%><br>
 
 # Analysis Software
@@ -162,10 +174,6 @@ head()
 
 
 
-
-
-
-
 <br><hr width=50%><br><br>
 
 <!-- ################################################### -->
@@ -177,6 +185,28 @@ head()
 ## Project directories {#dirs}
 ```{bash}
 cat images/project_tree.txt
+```
+
+<br><br>
+
+## Selected bioproject for metadata exploration
+- BioProject number:
+  - [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349): Multispecies 16S rRNA from bushmeat samples collected from Tanzania.
+  
+```{r}
+library(tidyverse, suppressPackageStartupMessages())
+metadata <- read_csv("data/metadata/bushmeat.csv", show_col_types = FALSE) %>%
+  colnames()
+
+```
+
+
+  - [PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168): Multi-omics response to biologic therapies in IBD - BioProject
+
+```{r}
+library(tidyverse, suppressPackageStartupMessages())
+read_csv("data/metadata/ibd.csv", show_col_types = FALSE) %>%  
+  colnames()
 ```
 
 <br><br>

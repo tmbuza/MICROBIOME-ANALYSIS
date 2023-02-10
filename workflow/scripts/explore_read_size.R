@@ -2,7 +2,7 @@
 
 library(tidyverse, suppressPackageStartupMessages())
 
-metadata <- read_csv("data/metadata/metadata.csv", show_col_types = FALSE) 
+metadata <- read_csv("data/metadata/bushmeat.csv", show_col_types = FALSE) 
 
 
 metadata %>% 
