@@ -135,6 +135,17 @@ library(schtools)
 ```{r child='workflow/scripts/bioinfo_pipelines.Rmd'}
 ```
 
+<br><hr width=50%><br>
+
+
+# References Databases
+- Mothur alignment references
+- Classifiers
+- Taxonomy references
+- Mock references
+
+```{r child='workflow/scripts/bioinfo_pipelines.Rmd'}
+```
 
 <br><hr width=50%><br>
 

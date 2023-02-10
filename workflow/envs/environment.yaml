@@ -13,7 +13,5 @@ dependencies:
   - libidn2 =2.3.3
   - libunistring =0.9.10
   - wget =1.20.3
-  - insilicoseq =1.3.5
-  - biopython =1.80
-  - scipy =1.10.0
-  - joblib =1.2.0
+  - mothur =1.48.0
+  - vsearch =2.15.2

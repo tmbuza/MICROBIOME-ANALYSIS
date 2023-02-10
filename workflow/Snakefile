@@ -41,7 +41,11 @@ rule all:
         expand("{testdir}/{accession}_1_sub.fastq", testdir=TESTDIR, accession=ACCESSIONS),
         expand("{testdir}/{accession}_2_sub.fastq", testdir=TESTDIR, accession=ACCESSIONS),
         # "results/mothur_mapping_file.tsv",
-        # "results/mothur_design_file.tsv"
+        # "results/mothur_design_file.tsv",
+        "data/mothur/references/silva.v4.align",
+        "data/mothur/references/trainset16_022016.pds.fasta",
+        "data/mothur/references/trainset16_022016.pds.tax",
+        "data/mothur/references/zymo.mock.16S.v4.fasta",
 
 
 # Get tidy metadata
@@ -153,7 +157,6 @@ rule mothur_mapping_file:
       "scripts/mothur_mapping_file.R"
 
 
-
 rule mothur_design_file:
     input:
         files="data/metadata/mothur_mapping_file.tsv",
@@ -162,6 +165,33 @@ rule mothur_design_file:
     threads: 1
     script:
       "scripts/mothur_design_file.R"
+
+# Downloading and formatting SILVA and RDP reference databases. The v4 region is extracted from 
+# SILVA database for use as reference alignment.
+rule get_mothur_references:
+	input:
+		script="workflow/scripts/mothurReferences.sh"
+	output:
+		silvaV4="data/mothur/references/silva.v4.align",
+		rdpFasta="data/mothur/references/trainset16_022016.pds.fasta",
+		rdpTax="data/mothur/references/trainset16_022016.pds.tax"
+	conda:
+		"envs/mothur.yaml"
+	shell:
+		"bash {input.script}"
+
+
+# Downloading the Zymo mock sequence files and extracting v4 region for error estimation.
+rule get_zymo_mock:
+	input:
+		script="workflow/scripts/mothurMock.sh",
+		silvaV4="data/mothur/references/silva.v4.align",
+	output:
+		mockV4="data/mothur/references/zymo.mock.16S.v4.fasta"
+	conda:
+		"envs/mothur.yaml"
+	shell:
+		"bash {input.script}"
 
 
 # Get directory tree
