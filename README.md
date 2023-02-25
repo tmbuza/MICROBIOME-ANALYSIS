@@ -1,1 +1,1 @@
-# Sample Metadata Exploration and Profiling
+# Exploring and profiling microbiome sample metadata
