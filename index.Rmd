@@ -1,35 +1,42 @@
 ---
-title:  "<big>MICROBIOME DATA INSIGHTS</big><br><br>Integrated Microbiome Analysis Pipelines<br>(IMAP)<br><br>"
+title:  "<big><u>IMAP-PART 02</u></big><br><br>Exploring and profiling metagenomic sample metadata<br><br>"
 subtitle: |
-  | ![](images/planning.png)<br>
-  | <big>IMAP-PART 1</big><br>Preparing for Microbiome Data Analysis<br><br>
-date: |
-  |  Updated on `r Sys.time()` <br>
+  | ![](images/metadata.png)<br>
+  | IMAP: Integrated Microbiome Analysis Pipelines<br><br><small>[Latest GitHub-Repo](https://github.com/tmbuza/imap-sample-metadata/)</small>
+date:
+- Updated on `r Sys.Date()`
 author: Teresia Mrema-Buza
 output: 
   html_document: 
-    css: css/styles.css
+css:
+- styles.css
 csl: "library/apa.csl"
-bibliography: "library/references.bib"
+bibliography:
+- library/references.bib
+- library/imap.bib
 link-citations: true
 mainfont:
 biblio-style: apalike
 email_address: "tmbuza@complexdatainsights.com"
-github_repo: "https://github.com/tmbuza/microbiome-analysis"
-github_page: "https://tmbuza.github.io/microbiome-analysis/"
-related_website: "https://complexdatainsights.com"
+github_repo: "https://github.com/tmbuza/imap-metadata-profiling"
 description: |
-  This repo provides integrated and highly curated solutions for reproducible research.
-
+  Minimal summary describing features for getting started with microbiome data analysis.
 ---
-<h4>Github Repo: `r rmarkdown::metadata$github_repo`. </h4> 
 
-<br>
 
+<div id="main-container">
+
+<!-- Google Fonts: https://fonts.google.com/?preview.text=IMAP%20template&preview.text_type=custom-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;700&display=swap" rel="stylesheet">
+
+<span class="fas fa-my-custom-icon"></span>
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(
@@ -50,204 +57,230 @@ knitr::opts_chunk$set(
 
 library(tidyverse, suppressPackageStartupMessages())
 library(schtools)
-
-```
-
-# Basic requirements
-
-<br>
-
-<img src="images/imap-part1.png">
-
-<br>
-
-## General Overview
-
-- We use the snakemake workflow management system [@Koster2021; @Snakemake2023] for:
-  - Maintaining reproducibility in technical validation and regeneration of results
-  - Creating scalable data analysis scaled to server, grid or cloud environment seamlessly.
-  - Fostering sustainable improvement of the microbiome data analysis.
-- Reviewing existing workflows methodlogies [@Snakemake2023; @Mothursnakemake] helps in gaining a better insights for improving microbiome data analysis.
-- We break any complex workflows into small contiguous but related chunks for simplicity reasons.
-- Each major step forms a separate executable snakemake rule and is represented in the DAG (Directed Acyclic Graph).
-
-<br>
-
-> We envision to keep fostering on continuous integration and development of highly reproducible workflows.
-
-
-<br><br>
-
-## Snakemake rule DAG
-<img src="dags/rulegraph.svg">
-<br><br>
-
-## Screenshot of interactive snakemake report {#smkreport}
-> The snakemake html report can be viewed using any compartible browser such as chrome to explore more on the workflow and the associated statistics. You will be able to close the left bar to get a better view of the dispaly.
-
-<img src="images/smkreport/screenshot.png">
-
-<br><hr width=50%><br>
-
-
-# Sample Metadata
-![](images/metadata.png)
-
-```{r child='workflow/scripts/metadata.Rmd'}
-```
-
-### Read count distribution
-
-**Example 1: Bushmeat project**
-
-![Bar chart depicting variables against read counts in bushmeat project.](images/bush_variable_freq.svg)
-
-<br>
-
-**Example 2: IBD project**
-
-![Bar chart depicting variables against read counts in IBD project.](images/ibd_variable_freq.svg)
-
-<br><hr width=50%><br>
-
-# Analysis Software
-```{r child='workflow/scripts/software.Rmd'}
-```
-
-<br><hr width=50%><br>
-
-# Quality Control Tools
-
-```{r child='workflow/scripts/preprocess_tools.Rmd'}
-```
-
-<br><hr width=50%><br>
-
-# Sequencing Data
-
-```{r child='workflow/scripts/sequencing_data.Rmd'}
-```
-
-<br><hr width=50%><br>
-
-# Bioinformatics Pipelines
-
-```{r child='workflow/scripts/bioinfo_pipelines.Rmd'}
-```
-
-<br><hr width=50%><br>
-
-
-# References Databases
-- Mothur alignment references
-- Classifiers
-- Taxonomy references
-- Mock references
-
-```{r child='workflow/scripts/bioinfo_pipelines.Rmd'}
-```
-
-<br><hr width=50%><br>
-
-# Mapping Files
-
-<!-- ```{r child='workflow/scripts/mapping_files.Rmd'}``` -->
-
-## Mothur sample mapping file
-The mapping files are required to direct the pipeline where to look for the files containing the sequencing data.
-
-- The format of the mapping files for `mothur` and `QIIME2` pipelines is slightly different. 
-- We will demonstrate how to prepare both.
-- Each mapping file will contain only the files that are parsed by bioinformatics analysis. 
-
-<br>
-
-```{r}
-source("workflow/scripts/mothur_mapping_file.R")
-read_tsv("data/metadata/mothur_mapping_file.tsv", show_col_types = F) %>% 
-head()
- 
 ```
 
 <br>
 
-## Mothur design file
-- Mothur pipeline expects the design (metadata) file to have column headers. 
-- We will extract only the desired number of samples.
-- The first column header should be **group**.
-- For more detail see Mothur [MiSeq SOP](https://mothur.org/wiki/miseq_sop/).
+# Project Overview
 
-```{r}
-source("workflow/scripts/mothur_design_file.R")
-read_tsv("data/metadata/mothur_design_file.tsv", show_col_types = F) %>% 
-head()
+## Current project tree
+```{bash tree, include=FALSE}
+bash workflow/scripts/tree.sh
 ```
 
-
-
-<br><hr width=50%><br><br>
-
-<!-- ################################################### -->
-# Appendix
-<!-- ################################################### -->
-
-<br>
-
-## Project directories {#dirs}
-```{bash}
+```{bash treeimg}
 cat images/project_tree.txt
 ```
 
 <br><br>
 
-## Selected bioproject for metadata exploration
+##  Current snakemake workflow
+```{bash ruledag, include=FALSE}
+bash workflow/scripts/rules_dag.sh
+```
+
+<img src="dags/rulegraph.svg">
+
+
+<br><br>
+
+
+<br><hr width=100%><br>
+
+# Sample Metadata overview
+![](images/metadata.png)
+
+```{r child='workflow/scripts/metadata.Rmd'}
+```
+
+# Exploring sample metadata
+<!-- # General Overview -->
+## What is metadata?
+* <b>Metadata</b> is a set of data that describes and provides information about other data. It is commonly defined as **data about data**.
+* **Sample metadata** described in this book refers to the description and context of the individual sample collected for a specific microbiome study.
+
+<br>
+
+## Metadata structure
+* Metadata collected at different stages (Figure 1) are typically organized in an Excel or Google spreadsheet where:
+  * The metadata table columns represent the properties of the samples.
+  * The metadata table rows contain information associated with the samples.
+  * Typically, the first column of sample metadata is Sample ID, which designates the key associated to individual sample
+  * Sampl ID must be unique.
+
+<br>
+
+## Embedded metadata
+* In most cases, you will find the metadata detached from the experimental data.
+* Embedded metadata integrates the experimental data especially for graphics.
+* Major microbiome analysis platforms require sample metadata, commonly referred to as **mapping file** when performing downstream analysis.
+
+<br>
+
+# Explore SRA metadata
+- Typically, after sequencing the microbiome DNA, the investigators are encouraged to deposit the sequence reads in a public repository. The Sequence Read Archive (SRA) is currently the best bioinformatics database for read information. The good thing about SRA is that it integrates data from the NCBI, the European Bioinformatics Institute (EBI), and the DNA Data Bank of Japan (DDBJ).
+- This demo uses metadata associated with four microbiome BioProjects, including:
+  - [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349): 16S rRNA from bushmeat samples collected from Tanzania Metagenome
+  - [PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168): Multi-omics suggest diverse mechanisms for response to biologic therapies in IBD
+  - [PRJEB21612](https://www.ncbi.nlm.nih.gov/sra/?term=PRJEB21612): Alterations of the gut microbiome in hypertension
+  - [PRJNA802976](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA802976): Changes to Gut Microbiota following Systemic Antibiotic Administration in Infants
+
+![Example screen shot of SRA Run Selector for metadata associated with the NCBI-SRA bioproject number PRJNA477349](images/sra_run_selector.png)
+
+<br><br>
+
+## Filtering metadata
+- You may want the sample metadata to include a few desired variables. 
+- It is a good habit to rename, modify or replace longer column names with meaningful names.
+- We will select a few columns to create a desired metadata for downstream analyses.
+
+<br><br>
+
+## Column names of selected Projects for demo
 - BioProject number:
   - [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349): Multispecies 16S rRNA from bushmeat samples collected from Tanzania.
   
 ```{r}
-library(tidyverse, suppressPackageStartupMessages())
-metadata <- read_csv("data/metadata/bushmeat.csv", show_col_types = FALSE) %>%
-  colnames()
+# library(tidyverse, suppressPackageStartupMessages())
 
+# col <- read_csv("../../data/metadata/metadata.csv", show_col_types = FALSE) %>% 
+# colnames() %>% 
+# as.data.frame()
+
+# colnames(col)[1] <- "PRJNA477349"
+# print(col)
 ```
 
 
-  - [PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168): Multi-omics response to biologic therapies in IBD - BioProject
+  - [PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168): Multi-omics response to biologic therapies in IBD.
 
 ```{r}
-library(tidyverse, suppressPackageStartupMessages())
-read_csv("data/metadata/ibd.csv", show_col_types = FALSE) %>%  
-  colnames()
+# library(tidyverse, suppressPackageStartupMessages())
+
+# col <- read_csv("../../data/metadata/ibd.csv", show_col_types = FALSE) %>% 
+# colnames() %>% 
+# as.data.frame()
+
+# colnames(col)[1] <- "PRJNA685168"
+# print(col)
 ```
+
+<br>
+
+<!-- ## Read count distribution -->
+
+<!-- ### Example 1 -->
+<!-- Bioproject [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349) (Bushmeat project). -->
+
+<!-- ![](images/variable_freq.svg) -->
+
+<!-- <br><br> -->
+
+<!-- ### Example 2 -->
+<!-- Bioproject [PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168) (IBD project). -->
+
+<!-- ![](images/ibd_variable_freq.svg) -->
+
+<!-- <br><br> -->
+
+## Sample collection points
+- Does the metadata contains latitudes and longitudes (lat-lon) of the collection point? 
+- You may consider dropping a pin on exact location. 
+- The [`leaflet`](https://rstudio.github.io/leaflet/) R package can do a great job in dropping a pin on the corresponding coordinate. 
+- Note that samples collected on the same coordinate will overlap. 
+- You can zoom in-out to expand or minimize the map. 
+- You can also mouse over the pin to see the variable label. 
+
+<br>
+
+<!-- ![Static image from the interactive HTML map converted using the html2image package.](images/sample_gps.png) -->
+
+<br><br><hr width=100%><br><br>
+
+```{block imaprepos, echo=TRUE}
+# Related work
+
+> Here we show the IMAP Repos integrated with Snakemake and GitHub Actions!
+
+<br> 
+
+| Repo | Description | Summary |
+|--------------|----------------------------------|--------------|
+| [IMAP-PART1](https://github.com/tmbuza/imap-basic-requirements/) | Preparing for microbiome data analysis | [GH-Pages](https://tmbuza.github.io/imap-basic-requirements/) |
+| [IMAP-PART2](https://github.com/tmbuza/imap-sample-metadata/) | Exploring and profiling microbiome sample metadata | [GH-Pages](https://tmbuza.github.io/imap-sample-metadata/) |
+| [IMAP-PART3](https://github.com/tmbuza/imap-bioinformatics-analysis/) | Bioinformatics analysis of microbiome data | [GH-Pages](https://tmbuza.github.io/imap-bioinformatics-analysis/) |
+| [IMAP-PART4](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
+| [IMAP-PART5](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
+| [IMAP-PART6](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
+| [IMAP-PART7](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
+| [IMAP-PART8](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
+```
+
+<br>
+
+## Citation
+Please consider citing the [iMAP article](https://rdcu.be/b5iVj) (see below) if you find any part of the IMAP practical user guides helpful in your microbiome data analysis.
+
+  Buza, T. M., Tonui, T., Stomeo, F., Tiambo, C., Katani, R., Schilling, M., … Kapur, V. (2019). iMAP: An integrated bioinformatics and visualization pipeline for microbiome data analysis. BMC Bioinformatics, 20. https://doi.org/10.1186/S12859-019-2965-4
+
+  <br>
+
+> Help to increase awareness of freely available microbiome data analysis tools.  
+> Current [iMAP manuscript dimensions](https://badge.dimensions.ai/details/id/pub.1117740326)
+
+
+<br><br><hr width=100%><br><br>
+
+# References
+::: {#refs}
+:::
 
 <br><br>
 
-## Troubleshooting (in progress)
+# Appendix
+
+## Static Snakemake report {#smkreport}
+> The interactive snakemake html report can be viewed by opening the `report.html` using any compartible browser. You will be able to explore the workflow and the associated statistics. You will also be able to close the left bar to get a better wider view of the display.
+
+```{bash smkrpt, include=FALSE}
+snakemake --unlock;
+snakemake --report report.html;
+hti -H report.html -o images/smkreport;
+```
+
+```{bash staticsmk, include=FALSE}
+snakemake --report report.html
+bash workflow/scripts/smk_html_report.sh
+```
+
+<img src="images/smkreport/screenshot.png">
+
+<br><br>
+
+## Troubleshooting
 <ol>
   <li>CiteprocXMLError: Missing root element</li>
     <ul>
       <li>Maybe the CSL file is empty. Some examples of citation style language are available on Github [@CSL2023].</li>
       <li></li>
     </ul>
-  <li>Error from srapath: Error: RC(rcNS,rcNoTarg,rcValidating,rcConnection,rcNotFound)</li>
+  <!-- <li>Error from srapath: Error: RC(rcNS,rcNoTarg,rcValidating,<br>rcConnection,rcNotFound)</li>
     <ul>
       <li>This happened when downloading SRA reads from online and it seems to be related to connection issues. Not clear what causes this error but keeping retrying sometimes helps.</li>
       <li>Alternatively, you can download the data using the NCBI-SraToolkits (fasterq-dump is the fastest).</li>
-    </ul>
+    </ul> -->
 </ol>
 
 
-<br><br><hr width=50%><br>
+<br><br>
 
-## References
-::: {#refs}
-:::
+</div> <!-- end main-container -->
 
-<br><br><hr width=100%><br>
 
 <div id="footer">
 Last updated on `r format(Sys.time(), '%B %d, %Y')`. <br><br>
-The snakemake workflow mentioned in this report is continuously being reviewed, integrated, tested and compiled by [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`).  
 Github_Repo: `r rmarkdown::metadata$github_repo`.  
+Repo compiled and maintained by: [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`).  
+
 
 </div><br><br>

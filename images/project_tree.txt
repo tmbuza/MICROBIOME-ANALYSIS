@@ -1,0 +1,64 @@
+.
+├── LICENSE
+├── README.md
+├── cicd.png
+├── config
+│   ├── config.yaml
+│   ├── samples.tsv
+│   └── units.tsv
+├── dags
+│   ├── rulegraph.png
+│   └── rulegraph.svg
+├── data
+│   ├── metadata
+│   ├── metadatarun_accessions.txt
+│   ├── reads
+│   └── temp
+├── images
+│   ├── bkgd.png
+│   ├── bkgd1.png
+│   ├── bkgd2.png
+│   ├── cicd.png
+│   ├── imap_all_parts.png
+│   ├── metadata.png
+│   ├── project_tree.txt
+│   ├── smkreport
+│   └── sra_run_selector.png
+├── imap-metadata-profiling.Rproj
+├── imap-template.html
+├── index.Rmd
+├── library
+│   ├── apa.csl
+│   ├── imap.bib
+│   └── references.bib
+├── refer
+│   ├── bioinfo_pipelines.Rmd
+│   ├── fetch_sra_metadata.py
+│   ├── mapping_files.Rmd
+│   ├── mothurError.sh
+│   ├── mothurMock.sh
+│   ├── mothurReferences.sh
+│   ├── mothurShared.sh
+│   ├── mothurSplitShared.sh
+│   ├── mothur_design_file.R
+│   ├── mothur_mapping_file.R
+│   ├── preprocess_tools.Rmd
+│   ├── project_overview.Rmd
+│   ├── read_csv.py
+│   ├── seqkit_stat_1.sh
+│   ├── sequencing_data.Rmd
+│   ├── software.Rmd
+│   └── subset_fastq.sh
+├── report.html
+├── resources
+├── results
+├── styles.css
+└── workflow
+    ├── Snakefile
+    ├── envs
+    ├── reports
+    ├── rules
+    ├── schemas
+    └── scripts
+
+18 directories, 43 files
