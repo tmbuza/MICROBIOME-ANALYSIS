@@ -1,6 +1,9 @@
 # Additional
+.vscode
+.DS_store
+Rplot.pdf
+fasterq*
 code
-The10BeatitudesInScripture.Rmd
 *metamap*
 *temp*
 *jquery*
@@ -8,16 +11,15 @@ The10BeatitudesInScripture.Rmd
 *samplelocmap*
 *leaflet*
 REFER
-library/*
-data/*
+data/
+!data/metadata_*.csv
 dags/dag.svg
 dags/dag.png
+resources/*
 results/*
-# dags/*.
-images/
-!images/bkgd.png
-!images/bkgd1.png
-!images/bkgd2.png
+current_files.summary
+
+images/*
 figures/*
 report/*
 .snakemake
@@ -154,6 +156,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .Rproj.user
+<<<<<<< Updated upstream
 workflow/.DS_Store
 workflow/rules/.DS_Store
 workflow/scripts/.DS_Store
+=======
+Rplots.pdf
+Rplots.pdf
+>>>>>>> Stashed changes
+.DS_Store
