@@ -154,3 +154,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .Rproj.user
+workflow/.DS_Store
+workflow/rules/.DS_Store
+workflow/scripts/.DS_Store
