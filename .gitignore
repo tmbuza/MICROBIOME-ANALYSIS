@@ -1,4 +1,5 @@
 # Additional
+report.html
 .vscode
 .DS_store
 Rplot.pdf
@@ -12,7 +13,7 @@ code
 *leaflet*
 REFER
 data/
-!data/metadata_*.csv
+# !data/metadata_*.csv
 dags/dag.svg
 dags/dag.png
 resources/*

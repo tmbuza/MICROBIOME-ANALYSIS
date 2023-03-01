@@ -1,6 +1,7 @@
 .
 ├── LICENSE
 ├── README.md
+├── Rplots.pdf
 ├── cicd.png
 ├── config
 │   ├── config.yaml
@@ -10,48 +11,39 @@
 │   ├── rulegraph.png
 │   └── rulegraph.svg
 ├── data
-│   ├── metadata
-│   ├── metadatarun_accessions.txt
-│   ├── reads
-│   └── temp
+│   └── metadata
 ├── images
+│   ├── PRJNA477349_gps.html
+│   ├── PRJNA477349_gps.png
+│   ├── PRJNA477349_gps_files
+│   ├── PRJNA477349_variable_freq.png
+│   ├── PRJNA477349_variable_freq.svg
+│   ├── PRJNA685168_variable_freq.png
+│   ├── PRJNA685168_variable_freq.svg
+│   ├── PRJNA802976_gps.html
+│   ├── PRJNA802976_gps.png
+│   ├── PRJNA802976_gps_files
 │   ├── bkgd.png
-│   ├── bkgd1.png
-│   ├── bkgd2.png
-│   ├── cicd.png
-│   ├── imap_all_parts.png
 │   ├── metadata.png
 │   ├── project_tree.txt
+│   ├── sample_gps.html
+│   ├── sample_gps.png
+│   ├── sample_gps_files
 │   ├── smkreport
 │   └── sra_run_selector.png
-├── imap-metadata-profiling.Rproj
-├── imap-template.html
+├── imap-sample-metadata.Rproj
 ├── index.Rmd
 ├── library
 │   ├── apa.csl
 │   ├── imap.bib
 │   └── references.bib
-├── refer
-│   ├── bioinfo_pipelines.Rmd
-│   ├── fetch_sra_metadata.py
-│   ├── mapping_files.Rmd
-│   ├── mothurError.sh
-│   ├── mothurMock.sh
-│   ├── mothurReferences.sh
-│   ├── mothurShared.sh
-│   ├── mothurSplitShared.sh
-│   ├── mothur_design_file.R
-│   ├── mothur_mapping_file.R
-│   ├── preprocess_tools.Rmd
-│   ├── project_overview.Rmd
-│   ├── read_csv.py
-│   ├── seqkit_stat_1.sh
-│   ├── sequencing_data.Rmd
-│   ├── software.Rmd
-│   └── subset_fastq.sh
 ├── report.html
 ├── resources
 ├── results
+│   ├── PRJNA477349_read_size_asce.csv
+│   ├── PRJNA477349_read_size_desc.csv
+│   ├── PRJNA685168_read_size_asce.csv
+│   └── PRJNA685168_read_size_desc.csv
 ├── styles.css
 └── workflow
     ├── Snakefile
@@ -61,4 +53,4 @@
     ├── schemas
     └── scripts
 
-18 directories, 43 files
+18 directories, 35 files
