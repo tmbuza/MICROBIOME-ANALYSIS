@@ -43,10 +43,17 @@
 ├── report.html
 ├── resources
 ├── results
+│   ├── PRJEB21612_sra_accessions.txt
+│   ├── PRJNA477349_read_size_asc.csv
 │   ├── PRJNA477349_read_size_asce.csv
 │   ├── PRJNA477349_read_size_desc.csv
+│   ├── PRJNA477349_sra_accessions.txt
+│   ├── PRJNA685168_read_size_asc.csv
 │   ├── PRJNA685168_read_size_asce.csv
-│   └── PRJNA685168_read_size_desc.csv
+│   ├── PRJNA685168_read_size_desc.csv
+│   ├── PRJNA685168_sra_accessions.txt
+│   ├── PRJNA802976_sra_accessions.txt
+│   └── metadata
 ├── styles.css
 └── workflow
     ├── Snakefile
@@ -56,4 +63,4 @@
     ├── schemas
     └── scripts
 
-19 directories, 37 files
+20 directories, 43 files

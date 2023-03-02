@@ -25,16 +25,16 @@ if not os.path.exists(OUTDIR):
 # Master rule for controlling workflow.
 rule all:
     input:
-        expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
-        "data/metadata/metadata_16S.csv",
-        "data/metadata/metadata_WGS.csv",        
-        expand("data/metadata/{bioproject}_full_metadata.csv", bioproject="PRJNA477349"),
-        expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject="PRJNA477349"),
-        expand("data/metadata/{bioproject}_run_accessions.txt", bioproject=config["bioproject"]),
-        expand("results/metadata/{bioproject}_read_size_asc.csv", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
-        expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
+        # expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
+        # "data/metadata/metadata_16S.csv",
+        # "data/metadata/metadata_WGS.csv",        
+        # expand("data/metadata/{bioproject}_full_metadata.csv", bioproject="PRJNA477349"),
+        # expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject="PRJNA477349"),
+        # expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        # expand("results/{bioproject}_read_size_asc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
+        # expand("results/{bioproject}_read_size_desc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
+        # expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
         "index.html",
-
 
 # Fetch SRRunInfo directly (incode)
 rule fetch_sra_runinfo:
@@ -78,21 +78,21 @@ rule merge_runselector_runinfo:
 # Get SRA accessions, the first column of metadata
 rule extract_accessions:
     input:
-        runinfo=rules.fetch_sra_runinfo.output,
+        runinfo=expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
         runmetadata=expand(rules.process_sra_metadata.output, bioproject=config["bioproject"]),
-        merged=rules.merge_runselector_runinfo.output,
+        metadata=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject="PRJNA477349")
     output:
-        runacc=expand("data/metadata/{bioproject}_run_accessions.txt", bioproject=config["bioproject"]),
+        runacc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
     script:
         "scripts/get_run_accessions.py"
 
 # Get variable barplot
 rule get_variable_freq:
     input:
-        runmetadata=rules.process_sra_metadata.output,
+        runmetadata=expand(rules.process_sra_metadata.output, bioproject=config["bioproject"]),
     output:
-        png=expand("results/{bioproject}_variable_freq.png", bioproject=["PRJNA477349", "PRJNA685168"]),
-        svg=expand("results/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349", "PRJNA685168"]),
+        png=expand("images/{bioproject}_variable_freq.png", bioproject=["PRJNA477349", "PRJNA685168"]),
+        svg=expand("images/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349", "PRJNA685168"]),
     script:
         "scripts/plot_var_freq.R"
 
@@ -102,8 +102,8 @@ rule explore_read_size:
     input:
         expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
     output:
-        asce=expand("results/metadata/{bioproject}_read_size_asc.csv", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
-        desc=expand("results/metadata/{bioproject}_read_size_desc.csv", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
+        asc=expand("results/{bioproject}_read_size_asc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
+        desc=expand("results/{bioproject}_read_size_desc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
     script:
         "scripts/explore_read_size.R"
 
@@ -252,7 +252,9 @@ rule deploy_to_github_pages:
         png=expand("images/{bioproject}_variable_freq.png",  bioproject=["PRJNA477349", "PRJNA685168"]),
         svg=expand("images/{bioproject}_variable_freq.svg",  bioproject=["PRJNA477349", "PRJNA685168"]),
         gps=expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
-        asce="results/PRJNA477349_read_size_asce.csv"
+        acc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        asc=expand("results/{bioproject}_read_size_asc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
+        desc=expand("results/{bioproject}_read_size_desc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
     output:
         doc="index.html",
     shell:
