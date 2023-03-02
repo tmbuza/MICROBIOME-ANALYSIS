@@ -13,6 +13,9 @@
 ├── data
 │   └── metadata
 ├── images
+│   ├── PRJEB21612_gps.html
+│   ├── PRJEB21612_gps.png
+│   ├── PRJEB21612_gps_files
 │   ├── PRJNA477349_gps.html
 │   ├── PRJNA477349_gps.png
 │   ├── PRJNA477349_gps_files
@@ -53,4 +56,4 @@
     ├── schemas
     └── scripts
 
-18 directories, 35 files
+19 directories, 37 files

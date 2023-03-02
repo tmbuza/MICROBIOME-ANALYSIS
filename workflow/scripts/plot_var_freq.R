@@ -45,8 +45,8 @@ read_csv("data/metadata/PRJNA685168.csv", show_col_types = FALSE) %>%
   mutate(bases = round(bases/1E6, digits = 0)) %>% 
   select(sample_id=run, age, sex, bmi, smoking, steriods, antibiotics, biologic, priortnf, wk14, wk52, mb_bases=bases)  %>%
 
-  ggplot(aes(x = antibiotics, y = mb_bases, fill = sex)) +
-  facet_grid(~biologic) +
+  ggplot(aes(x = antibiotics, y = mb_bases, fill = biologic)) +
+  facet_grid(~sex) +
   geom_col(position = "dodge") +
   coord_flip() +
   labs(x = "Taking Antibiotic", y = "Read size (milion bases)") +

@@ -82,3 +82,42 @@ m <- metadata %>%
 saveWidget(m, "images/PRJNA802976_gps.html", selfcontained = FALSE)
 webshot("images/PRJNA802976_gps.html", file = "images/PRJNA802976_gps.png",
         cliprect = "viewport")
+
+
+
+# NCBI BioProject PRJEB21612: 
+library(tidyverse, suppressPackageStartupMessages())
+
+metadata <- read_csv("data/metadata/PRJEB21612.csv", show_col_types = FALSE) %>% 
+  rename_all(tolower) %>%
+  rename(sample_id = run) %>% 
+  distinct(., sample_id, .keep_all = TRUE) %>% 
+  mutate(bases = round(bases/1E6, digits = 0)) %>% 
+  select(sample_id, latitude = "geographic_location_(latitude)", longitude = "geographic_location_(longitude)", mb_bases=bases)
+ 
+
+# Sample GPS
+library(leaflet)
+library(leaflet.providers)
+library(htmlwidgets)
+library(webshot)
+library(mapview)
+
+read_csv("data/metadata/PRJEB21612_tidy_metadata.csv")
+
+minLat <- min(metadata$latitude) - 1
+minLon <- min(metadata$longitude) + 0
+maxLat <- max(metadata$latitude) + .5
+maxLon <- max(metadata$longitude) + 0
+
+m <- metadata %>%
+  leaflet() %>% 
+  addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
+  fitBounds(minLon, minLat, maxLon, maxLat) %>%
+  addMarkers(lng = ~longitude, lat = ~latitude, popup = ~sample_id, label = ~ c(sample_id)) %>%
+  addCircles(color="magenta", radius = log1p(metadata$longitude) * 10)
+
+## save html to png
+saveWidget(m, "images/PRJEB21612_gps.html", selfcontained = FALSE)
+webshot("images/PRJEB21612_gps.html", file = "images/PRJEB21612_gps.png",
+        cliprect = "viewport")
