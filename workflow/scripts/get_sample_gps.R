@@ -1,6 +1,7 @@
 #!/Users/tmbuza/opt/anaconda3/envs/snakemake/bin/Rscript
 
 library(tidyverse, suppressPackageStartupMessages())
+if (!dir.exists("images/gpsfiles")){dir.create("images/gpsfiles")}
 
 metadata <- read_csv("data/metadata/PRJNA477349.csv", show_col_types = FALSE) %>%  
   rename_all(tolower) %>% 
@@ -39,8 +40,8 @@ m <- metadata %>%
   addCircles(color="magenta", radius = log1p(metadata$longitude) * 10)
 
 ## save html to png
-saveWidget(m, "images/PRJNA477349_gps.html", selfcontained = FALSE)
-webshot("images/PRJNA477349_gps.html", file = "images/PRJNA477349_gps.png",
+saveWidget(m, "images/gpsfiles/PRJNA477349_gps.html", selfcontained = FALSE)
+webshot("images/gpsfiles/PRJNA477349_gps.html", file = "images/PRJNA477349_gps.png",
         cliprect = "viewport")
 
 
@@ -79,8 +80,8 @@ m <- metadata %>%
   addCircles(color="magenta", radius = log1p(metadata$longitude) * 10)
 
 ## save html to png
-saveWidget(m, "images/PRJNA802976_gps.html", selfcontained = FALSE)
-webshot("images/PRJNA802976_gps.html", file = "images/PRJNA802976_gps.png",
+saveWidget(m, "images/gpsfiles/PRJNA802976_gps.html", selfcontained = FALSE)
+webshot("images/gpsfiles/PRJNA802976_gps.html", file = "images/PRJNA802976_gps.png",
         cliprect = "viewport")
 
 
@@ -118,6 +119,6 @@ m <- metadata %>%
   addCircles(color="magenta", radius = log1p(metadata$longitude) * 10)
 
 ## save html to png
-saveWidget(m, "images/PRJEB21612_gps.html", selfcontained = FALSE)
-webshot("images/PRJEB21612_gps.html", file = "images/PRJEB21612_gps.png",
+saveWidget(m, "images/gpsfiles/PRJEB21612_gps.html", selfcontained = FALSE)
+webshot("images/gpsfiles/PRJEB21612_gps.html", file = "images/PRJEB21612_gps.png",
         cliprect = "viewport")

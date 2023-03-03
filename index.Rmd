@@ -23,10 +23,9 @@ description: |
   Minimal summary describing features for getting started with microbiome data analysis.
 ---
 
-
 <div id="main-container">
 
-<!-- Google Fonts: https://fonts.google.com/?preview.text=IMAP%20template&preview.text_type=custom-->
+<!-- Google Fonts: https://fonts.google.com/?preview.text=IMAP%20template&preview.text_type=custom -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton" rel="stylesheet">
@@ -69,7 +68,7 @@ bash workflow/scripts/tree.sh
 ```
 
 ```{bash treeimg}
-cat images/project_tree.txt
+cat results/project_tree.txt
 ```
 
 <br><br>
@@ -112,7 +111,7 @@ bash workflow/scripts/rules_dag.sh
 ## Brief overview
 Typically, after sequencing the microbiome DNA, the investigators are encouraged to deposit the sequence reads in a public repository. The Sequence Read Archive (SRA) is currently the best bioinformatics database for read information. The good thing about SRA is that it integrates data from the NCBI, the European Bioinformatics Institute (EBI), and the DNA Data Bank of Japan (DDBJ). 
 
-## Metadata via SRA Run Selector [#runselector]
+## Downloading metadata via SRA Run Selector [#runselector]
 Metadata associated with a specific project can be retrieved manually via the `SRA Run Selector` or using the Entrez Direct (edirect) scipts. 
 
 - Note that the SRA filename for metadata is automatically named SraRunTable.txt, but for clarity we will provide a filename corresponding to the NCBI-BioProject ID with `.CSV` extension.
@@ -125,7 +124,7 @@ if (!dir.exists("data")) {dir.create("data")}
 if (!dir.exists("data/metadata")) {dir.create("data/metadata")}
 ```
 
-We will explore more on sample metadata retrieved from four randomly selected microbiome BioProjects, including: 
+For demo: We will explore more on sample metadata retrieved from four randomly selected microbiome BioProjects, including: 
 
 1. [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349): 16S: rRNA from bushmeat samples collected from Tanzania Metagenome
 2. [PRJNA802976](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA802976): 16S: Changes to Gut Microbiota following Systemic Antibiotic Administration in Infants
@@ -134,9 +133,7 @@ We will explore more on sample metadata retrieved from four randomly selected mi
 
 <br>
 
-
 ![Example screen shot of SRA Run Selector for metadata associated with the NCBI-SRA bioproject number PRJNA477349](images/sra_run_selector.png){#runselector}
-
 
 <br><br>
 
@@ -196,8 +193,20 @@ paste("There are", dim(sraruntable)[1], "rows and", dim(sraruntable)[2],"columns
 
 <br><br>
 
-## How to download Entrez runinfo 
-- There are only 47 standardized columns associated with each bioproject. 
+## Downloading the Entrez SRA runinfo 
+- The Entrez direct functionalities provide uniform 47 columns for each bioproject. 
+- Below is a list of associated columns.
+
+```{bash, eval=FALSE}
+esearch -db sra -query 'PRJNA477349[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA477349.csv;
+
+esearch -db sra -query 'PRJNA802976[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA802976.csv;
+
+esearch -db sra -query 'PRJNA685168[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA685168.csv;
+
+esearch -db sra -query 'PRJEB21612[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJEB21612.csv;
+```
+
 
 ```{r runinfo_df, echo=FALSE}
 library(tidyverse, suppressPackageStartupMessages())
@@ -218,27 +227,18 @@ df <- data.frame(PRJNA477349, PRJNA802976, PRJNA685168, PRJEB21612) %>%
   mutate(EqualAllProjects = PRJNA477349==PRJNA685168 & PRJNA685168==PRJEB21612 & PRJEB21612==PRJNA802976, .after=1)
 ```
 
-<br>
-
-## Columns associated with run information
 ```{r, runinfo_columns}
 colnames(df)[2] <- "RunInfoColumns"
 df[, 1]
 ```
 
-```bash
-esearch -db sra -query 'PRJNA477349[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA477349.csv;
+<br>
 
-esearch -db sra -query 'PRJNA802976[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA802976.csv;
-
-esearch -db sra -query 'PRJNA685168[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA685168.csv;
-
-esearch -db sra -query 'PRJEB21612[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJEB21612.csv;
-```
-
-> Full metadata, which is bioproject-specific, can manually be downloaded from the SRA database using the RunSelector option as described above [#runselector]:
+> Note: Full metadata, which is bioproject-specific, can manually be downloaded from the SRA database using the RunSelector option as described above [#runselector]:
 
 <br><br>
+
+# Graphical exploration
 
 ## Demo with PRJNA477349 metadata
 > The `PRJNA477349` contains latitudes and longitudes information which will enable dropping pins on collection sites.
