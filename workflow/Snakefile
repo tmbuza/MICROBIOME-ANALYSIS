@@ -28,12 +28,12 @@ rule all:
         # expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
         "data/metadata/metadata_16S.csv",
         "data/metadata/metadata_WGS.csv",        
-        expand("data/metadata/{bioproject}_full_metadata.csv", bioproject="PRJNA477349"),
-        # expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject="PRJNA477349"),
-        # expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
-        # expand("results/{bioproject}_read_size_asc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
-        # expand("results/{bioproject}_read_size_desc.csv", bioproject=["PRJNA477349", "PRJNA685168"]),
-        # expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
+        expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]), # Demo only
+        # expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
+        expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        expand("results/{bioproject}_read_size_asc.csv", bioproject=config["bioproject"]),
+        expand("results/{bioproject}_read_size_desc.csv", bioproject=config["bioproject"]),
+        expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
         "index.html",
 
 # Fetch SRRunInfo directly (incode)
@@ -43,44 +43,44 @@ rule fetch_sra_runinfo:
     shell:
          "bash workflow/scripts/fetch_sra_runinfo.sh"
 
+
+ # SRA RunSelectir metadata (must be downloaded first)
+rule get_n_process_sraruntable:  
+    input:
+        runmetadata=expand("data/metadata/{bioproject}.csv", bioproject=config["bioproject"]),
+    output:
+        tidy=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
+    script:
+        "scripts/process_sraruntable.R"       
+
+
+# Demo merging sraruntable and esearch metadata
+rule merge_metadata:
+    input:
+        tidy=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
+        runinfo=rules.fetch_sra_runinfo.output,
+    output:
+        metadata=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]),
+    script:
+        "scripts/merge_metadata.R"
+
+
 # Process RunInfo metadata
 rule user_optional_filtering:
     input:
-        rules.fetch_sra_runinfo.output
+        fullmeta=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]), 
     output:
         amp="data/metadata/metadata_16S.csv",
         wgs="data/metadata/metadata_WGS.csv",
     script:
         "scripts/select_runinfo.R"
         
-
- # SRA RunSelectir metadata (must be downloaded first)
-rule process_sra_metadata:  
-    input:
-        runmetadata=expand("data/metadata/{bioproject}.csv", bioproject=config["bioproject"]),
-    output:
-        "data/metadata/{bioproject}_tidy_metadata.csv",
-    script:
-        "scripts/process_sra_metadata.R"       
-
-
-# Demo merging downloaded and esearch metadata
-rule merge_runselector_runinfo:
-    input:
-        esearch=rules.fetch_sra_runinfo.output,
-        runmetadata=expand("data/metadata/{bioproject}.csv", bioproject="PRJNA477349")
-    output:
-        metadata=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject="PRJNA477349")
-    script:
-        "scripts/merge_metadata.R"
-
-
 # Get SRA accessions, the first column of metadata
 rule extract_accessions:
     input:
         runinfo=expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
-        runmetadata=expand(rules.process_sra_metadata.output, bioproject=config["bioproject"]),
-        metadata=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject="PRJNA477349")
+        runmetadata=expand(rules.get_n_process_sraruntable.output, bioproject=config["bioproject"]),
+        metadata=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]),
     output:
         runacc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
     script:
@@ -89,7 +89,7 @@ rule extract_accessions:
 # Get variable barplot
 rule get_variable_freq:
     input:
-        runmetadata=expand(rules.process_sra_metadata.output, bioproject=config["bioproject"]),
+        runmetadata=expand(rules.get_n_process_sraruntable.output, bioproject=config["bioproject"]),
     output:
         png=expand("images/{bioproject}_variable_freq.png", bioproject=["PRJNA477349", "PRJNA685168"]),
         svg=expand("images/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349", "PRJNA685168"]),
@@ -251,8 +251,8 @@ rule deploy_to_github_pages:
         html2png=rules.static_snakemake_report.output.html2png,
         png=expand("images/{bioproject}_variable_freq.png",  bioproject=["PRJNA477349", "PRJNA685168"]),
         svg=expand("images/{bioproject}_variable_freq.svg",  bioproject=["PRJNA477349", "PRJNA685168"]),
-        gps=expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
-        acc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        # gps=expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
+        # acc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
         asc=expand("results/{bioproject}_read_size_asc.csv", bioproject=config["bioproject"]),
         desc=expand("results/{bioproject}_read_size_desc.csv", bioproject=config["bioproject"]),
     output:
