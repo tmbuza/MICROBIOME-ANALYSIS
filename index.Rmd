@@ -2,8 +2,9 @@
 title:  "<big><u>IMAP-PART 02</u></big><br><br>Exploring and profiling metagenomic sample metadata<br><br>"
 subtitle: |
   | ![](images/metadata.png)<br>
-  | IMAP: Integrated Microbiome Analysis Pipelines<br><br><small>[Latest GitHub-Repo](https://github.com/tmbuza/imap-sample-metadata/)</small>
+  | Fostering Reproducible Microbiome data Analysis with Snakemake workflow
 date:
+- IMAP-PART 01<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-sample-metadata/)<br>
 - Updated on `r Sys.Date()`
 author: Teresia Mrema-Buza
 output: 
@@ -18,14 +19,15 @@ link-citations: true
 mainfont:
 biblio-style: apalike
 email_address: "tmbuza@complexdatainsights.com"
-github_repo: "https://github.com/tmbuza/imap-metadata-profiling"
+github_repo: "https://github.com/tmbuza/imap-sample-metadata"
 description: |
   Minimal summary describing features for getting started with microbiome data analysis.
 ---
 
 <div id="main-container">
 
-<!-- Google Fonts: https://fonts.google.com/?preview.text=IMAP%20template&preview.text_type=custom -->
+
+<!-- Google Fonts: https://fonts.google.com/?preview.text=IMAP%20template&preview.text_type=custom-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton" rel="stylesheet">
@@ -36,53 +38,28 @@ description: |
 
 <span class="fas fa-my-custom-icon"></span>
 
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE,
-  cache = FALSE,
-  comment = NA,
+  echo  =FALSE,
+  message  =FALSE,
+  warning  =FALSE,
+  cache  =FALSE,
+  comment  =NA,
   fig.path='./figures/',
   fig.show='asis',
-  dev = 'png',
+  dev  ='png',
   fig.align='center',
-  out.width = "70%",
-  fig.width = 7,
-  fig.asp = 0.7,
-  fig.show = "asis"
+  out.width  ="70%",
+  fig.width  =7,
+  fig.asp  =0.7,
+  fig.show  ="asis"
 )
 
 library(tidyverse, suppressPackageStartupMessages())
 library(schtools)
 ```
 
-<br>
-
-# Project Overview
-
-## Current project tree
-```{bash tree, include=FALSE}
-bash workflow/scripts/tree.sh
-```
-
-```{bash treeimg}
-cat results/project_tree.txt
-```
-
-<br><br>
-
-##  Current snakemake workflow
-```{bash ruledag, include=FALSE}
-bash workflow/scripts/rules_dag.sh
-```
-
-<img src="dags/rulegraph.svg">
-
-<br><hr width=100%><br>
-
-# General overview
+# General Overview
 
 ## What is metadata?
 - <b>Metadata</b> is a set of data that describes and provides information about other data. It is commonly defined as **data about data**.
@@ -190,7 +167,6 @@ paste("There are", dim(sraruntable)[1], "rows and", dim(sraruntable)[2],"columns
 # colnames(sraruntable)
 ```
 
-
 <br><br>
 
 ## Downloading the Entrez SRA runinfo 
@@ -206,7 +182,6 @@ esearch -db sra -query 'PRJNA685168[bioproject]' | efetch -format runinfo >data/
 
 esearch -db sra -query 'PRJEB21612[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJEB21612.csv;
 ```
-
 
 ```{r runinfo_df, echo=FALSE}
 library(tidyverse, suppressPackageStartupMessages())
@@ -290,18 +265,15 @@ Sampling points
 ![](images/PRJEB21612_gps.png)
 
 
-<br><br><hr width=100%><br><br>
+<br><hr width=100%><br>
+
 
 # Related work
 ```{block imaprepos, echo=TRUE}
 
-> Here we show the IMAP Repos integrated with Snakemake and GitHub Actions!
-
-<br> 
-
 | Repo | Description | Summary |
 |--------------|----------------------------------|--------------|
-| [IMAP-PART1](https://github.com/tmbuza/imap-basic-requirements/) | Preparing for microbiome data analysis | [GH-Pages](https://tmbuza.github.io/imap-basic-requirements/) |
+| [IMAP-PART1](https://github.com/tmbuza/imap-basic-requirements/) | Getting started with microbiome data analysis | [GH-Pages](https://tmbuza.github.io/imap-basic-requirements/) |
 | [IMAP-PART2](https://github.com/tmbuza/imap-sample-metadata/) | Exploring and profiling microbiome sample metadata | [GH-Pages](https://tmbuza.github.io/imap-sample-metadata/) |
 | [IMAP-PART3](https://github.com/tmbuza/imap-bioinformatics-analysis/) | Bioinformatics analysis of microbiome data | [GH-Pages](https://tmbuza.github.io/imap-bioinformatics-analysis/) |
 | [IMAP-PART4](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
@@ -311,30 +283,29 @@ Sampling points
 | [IMAP-PART8](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
 ```
 
-<br>
 
 ## Citation
-Please consider citing the [iMAP article](https://rdcu.be/b5iVj) (see below) if you find any part of the IMAP practical user guides helpful in your microbiome data analysis.
 
-  Buza, T. M., Tonui, T., Stomeo, F., Tiambo, C., Katani, R., Schilling, M., … Kapur, V. (2019). iMAP: An integrated bioinformatics and visualization pipeline for microbiome data analysis. BMC Bioinformatics, 20. https://doi.org/10.1186/S12859-019-2965-4
-
-  <br>
-
-> Help to increase awareness of freely available microbiome data analysis tools.  
-> Current [iMAP manuscript dimensions](https://badge.dimensions.ai/details/id/pub.1117740326)
-
-
-<br><br><hr width=100%><br><br>
+> Please consider citing the iMAP article [@TMBuza2019] if you find any part of the IMAP practical user guides helpful in your microbiome data analysis.
 
 # References
 ::: {#refs}
 :::
 
-<br><br>
+<br><hr width=100%><br>
 
-# Appendix
+# Appendix {-}
 
-## Static Snakemake report {#smkreport}
+## Project main tree
+```{bash, include=FALSE}
+bash workflow/scripts/tree.sh
+```
+
+```{bash treeimg}
+cat results/project_tree.txt
+```
+
+## Screenshot of interactive snakemake report {#smkreport}
 > The interactive snakemake html report can be viewed by opening the `report.html` using any compartible browser. You will be able to explore the workflow and the associated statistics. You will also be able to close the left bar to get a better wider view of the display.
 
 ```{bash smkrpt, include=FALSE}
@@ -350,34 +321,22 @@ bash workflow/scripts/smk_html_report.sh
 
 <img src="images/smkreport/screenshot.png">
 
-<br><br>
 
-## Troubleshooting
+## Troubleshooting of FAQs
 <ol>
-  <li>CiteprocXMLError: Missing root element</li>
-    <ul>
-      <li>Maybe the CSL file is empty. Some examples of citation style language are available on Github [@CSL2023].</li>
-      <li></li>
-    </ul>
-  <!-- <li>Error from srapath: Error: RC(rcNS,rcNoTarg,rcValidating,<br>rcConnection,rcNotFound)</li>
-    <ul>
-      <li>This happened when downloading SRA reads from online and it seems to be related to connection issues. Not clear what causes this error but keeping retrying sometimes helps.</li>
-      <li>Alternatively, you can download the data using the NCBI-SraToolkits (fasterq-dump is the fastest).</li>
-    </ul> -->
+  <li>Question</li>
+    <ul>Answer</ul>
+  <li>Question</li>
+    <ul>Answer</ul>
 </ol>
 
 
-<br><br>
-
 </div> <!-- end main-container -->
 
+<br><hr width=100%><br>
 
 <div id="footer">
-Last updated on `r format(Sys.time(), '%B %d, %Y')`. <br><br>
-Github_Repo: `r rmarkdown::metadata$github_repo`.  
-Repo compiled and maintained by: [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`).  
-
-
-</div><br><br>
-
-
+Last updated on `r format(Sys.time(), '%B %d, %Y')`.<br>
+Github_Repo: `r rmarkdown::metadata$github_repo`.<br>
+Repo compiled and maintained by: [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`). 
+</div>
