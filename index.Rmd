@@ -82,24 +82,14 @@ library(schtools)
 - Major microbiome analysis platforms require sample metadata, commonly referred to as **mapping file** when performing downstream analysis.
 
 <br>
+<br>
 
 # Explore SRA metadata
 
-## Brief overview
-Typically, after sequencing the microbiome DNA, the investigators are encouraged to deposit the sequence reads in a public repository. The Sequence Read Archive (SRA) is currently the best bioinformatics database for read information. The good thing about SRA is that it integrates data from the NCBI, the European Bioinformatics Institute (EBI), and the DNA Data Bank of Japan (DDBJ). 
-
-## Downloading metadata via SRA Run Selector [#runselector]
-Metadata associated with a specific project can be retrieved manually via the `SRA Run Selector` or using the Entrez Direct (edirect) scipts. 
-
-- Note that the SRA filename for metadata is automatically named SraRunTable.txt, but for clarity we will provide a filename corresponding to the NCBI-BioProject ID with `.CSV` extension.
-- We will save the metadata file in `data/metdata/` folder.
-
-Let’s create the folder (if it doesn’t exist!).
-
-```{r metadata_folder}
-if (!dir.exists("data")) {dir.create("data")}
-if (!dir.exists("data/metadata")) {dir.create("data/metadata")}
-```
+## Downloading SRA metadata
+- Via SRA Run Selector
+- Via Entrez Direct
+- Using pysradb
 
 For demo: We will explore more on sample metadata retrieved from four randomly selected microbiome BioProjects, including: 
 
@@ -108,104 +98,51 @@ For demo: We will explore more on sample metadata retrieved from four randomly s
 3. [PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168): WGS: Multi-omics suggest diverse mechanisms for response to biologic therapies in IBD
 4. [PRJEB21612](https://www.ncbi.nlm.nih.gov/sra/?term=PRJEB21612): WGS: Alterations of the gut microbiome in hypertension
 
+## Using SRA Run Selector
+Metadata associated with a specific project can be retrieved manually via the `SRA Run Selector` or using the Entrez Direct (edirect) scipts. 
+
+- Note that the SRA filename for metadata is automatically named SraRunTable.txt, but for clarity we will provide a filename corresponding to the NCBI-BioProject ID with `.CSV` extension.
+- We will save the metadata file in `data/metdata/` folder.
+
 <br>
 
 ![Example screen shot of SRA Run Selector for metadata associated with the NCBI-SRA bioproject number PRJNA477349](images/sra_run_selector.png){#runselector}
 
-<br><br>
-
-## How many rows and columns
-Getting a clear knowledge about the variables associated with a sample metadata can help in filtering the most important features for downstream analysis.
-
-[PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349)
-```{r}
-library(tidyverse, suppressPackageStartupMessages())
-
-sraruntable <- read_csv("data/metadata/PRJNA477349.csv", show_col_types = FALSE)
-
-paste("There are", dim(sraruntable)[1], "rows and", dim(sraruntable)[2],"columns in PRJNA477349 metadata")
-
-# colnames(sraruntable)
-```
-
 <br>
 
-[PRJNA802976](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA802976)
+### Explore top 1and bottom columns in each project
 ```{r}
 library(tidyverse, suppressPackageStartupMessages())
 
-sraruntable <- read_csv("data/metadata/PRJNA802976.csv", show_col_types = FALSE)
+PRJNA477349 <- read_csv("data/metadata/PRJNA477349_metadata.csv", show_col_types = FALSE)
+colnames(PRJNA477349) %>% as.data.frame %>% head(5)
+colnames(PRJNA477349) %>% as.data.frame %>% tail(5)
+paste("There are", dim(PRJNA477349)[1], "rows and", dim(PRJNA477349)[2],"columns in PRJNA477349 metadata")
 
-paste("There are", dim(sraruntable)[1], "rows and", dim(sraruntable)[2],"columns in PRJNA802976 metadata")
+PRJNA802976 <- read_csv("data/metadata/PRJNA802976_metadata.csv", show_col_types = FALSE)
+colnames(PRJNA802976) %>% as.data.frame %>% head(5)
+colnames(PRJNA802976) %>% as.data.frame %>% tail(5)
+paste("There are", dim(PRJNA802976)[1], "rows and", dim(PRJNA802976)[2],"columns in PRJNA802976 metadata")
 
-# colnames(sraruntable)
-```
+PRJNA685168 <- read_csv("data/metadata/PRJNA685168_metadata.csv", show_col_types = FALSE)
+colnames(PRJNA685168) %>% as.data.frame %>% head(5)
+colnames(PRJNA685168) %>% as.data.frame %>% tail(5)
+paste("There are", dim(PRJNA685168)[1], "rows and", dim(PRJNA685168)[2],"columns in PRJNA685168 metadata")
 
-<br>
-
-[PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168)
-```{r}
-library(tidyverse, suppressPackageStartupMessages())
-
-sraruntable <- read_csv("data/metadata/PRJNA685168.csv", show_col_types = FALSE)
-
-paste("There are", dim(sraruntable)[1], "rows and", dim(sraruntable)[2],"columns in PRJNA685168 metadata")
-
-# colnames(sraruntable)
-```
-
-<br>
-
-[PRJEB21612](https://www.ncbi.nlm.nih.gov/sra/?term=PRJEB21612)
-```{r}
-library(tidyverse, suppressPackageStartupMessages())
-
-sraruntable <- read_csv("data/metadata/PRJEB21612.csv", show_col_types = FALSE)
-
-paste("There are", dim(sraruntable)[1], "rows and", dim(sraruntable)[2],"columns in PRJEB21612 metadata")
-
-# colnames(sraruntable)
+PRJEB21612 <- read_csv("data/metadata/PRJEB21612_metadata.csv", show_col_types = FALSE)
+colnames(PRJEB21612) %>% as.data.frame %>% head(5)
+colnames(PRJEB21612) %>% as.data.frame %>% tail(5)
+paste("There are", dim(PRJEB21612)[1], "rows and", dim(PRJEB21612)[2],"columns in PRJEB21612 metadata")
 ```
 
 <br><br>
 
-## Downloading the Entrez SRA runinfo 
+## Downloading via Entrez SRA runinfo 
 - The Entrez direct functionalities provide uniform 47 columns for each bioproject. 
-- Below is a list of associated columns.
 
-```{bash, eval=FALSE}
-esearch -db sra -query 'PRJNA477349[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA477349.csv;
 
-esearch -db sra -query 'PRJNA802976[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA802976.csv;
 
-esearch -db sra -query 'PRJNA685168[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA685168.csv;
 
-esearch -db sra -query 'PRJEB21612[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJEB21612.csv;
-```
-
-```{r runinfo_df, echo=FALSE}
-library(tidyverse, suppressPackageStartupMessages())
-
-PRJNA477349 <- read_csv("data/metadata/runinfo_PRJNA477349.csv", show_col_types = FALSE) %>% colnames() %>% as.data.frame()
-colnames(PRJNA477349) <- "PRJNA477349"
-
-PRJNA802976 <- read_csv("data/metadata/runinfo_PRJNA802976.csv", show_col_types = FALSE) %>% colnames() %>% as.data.frame()
-colnames(PRJNA802976) <- "PRJNA802976"
-
-PRJNA685168 <- read_csv("data/metadata/runinfo_PRJNA685168.csv", show_col_types = FALSE) %>% colnames() %>% as.data.frame()
-colnames(PRJNA685168) <- "PRJNA685168"
-
-PRJEB21612 <- read_csv("data/metadata/runinfo_PRJEB21612.csv", show_col_types = FALSE) %>% colnames() %>% as.data.frame()
-colnames(PRJEB21612) <- "PRJEB21612"
-
-df <- data.frame(PRJNA477349, PRJNA802976, PRJNA685168, PRJEB21612) %>% 
-  mutate(EqualAllProjects = PRJNA477349==PRJNA685168 & PRJNA685168==PRJEB21612 & PRJEB21612==PRJNA802976, .after=1)
-```
-
-```{r, runinfo_columns}
-colnames(df)[2] <- "RunInfoColumns"
-df[, 1]
-```
 
 <br>
 
@@ -234,7 +171,6 @@ Sampling points
 
 ## Demo with PRJNA685168 metadata
 > The `PRJNA685168` is an IBD study in relation to responses to biologic therapies, it contains sex and age features.
-
 
 <br>
 
@@ -297,11 +233,11 @@ Sampling points
 # Appendix {-}
 
 ## Project main tree
-```{bash, include=FALSE}
+```{bash, include=FALSE, eval=FALSE}
 bash workflow/scripts/tree.sh
 ```
 
-```{bash treeimg}
+```{bash treeimg, eval=FALSE}
 cat results/project_tree.txt
 ```
 
@@ -340,3 +276,4 @@ Last updated on `r format(Sys.time(), '%B %d, %Y')`.<br>
 Github_Repo: `r rmarkdown::metadata$github_repo`.<br>
 Repo compiled and maintained by: [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`). 
 </div>
+

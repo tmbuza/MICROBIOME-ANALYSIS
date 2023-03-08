@@ -25,11 +25,8 @@ if not os.path.exists(OUTDIR):
 # Master rule for controlling workflow.
 rule all:
     input:
-        # expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
-        "data/metadata/metadata_16S.csv",
-        "data/metadata/metadata_WGS.csv",        
-        expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]), # Demo only
-        # expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
+        expand("data/metadata/{bioproject}_metadata.csv", bioproject=config["bioproject"]),
+        expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
         expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
         expand("results/{bioproject}_read_size_asc.csv", bioproject=config["bioproject"]),
         expand("results/{bioproject}_read_size_desc.csv", bioproject=config["bioproject"]),
@@ -37,50 +34,28 @@ rule all:
         "index.html",
 
 # Fetch SRRunInfo directly (incode)
-rule fetch_sra_runinfo:
+rule get_sra_metadata:
     output:
-        runinfo=expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
+        # runinfo=expand("data/me{bioproject}.csv", bioproject=config["bioproject"]),
+        pysradb=expand("data/metadata/{bioproject}_metadata.csv", bioproject=config["bioproject"]),
+        # pysradb_=expand("data/metadata/{bioproject}_metadata_.csv", bioproject=config["bioproject"]),
     shell:
-         "bash workflow/scripts/fetch_sra_runinfo.sh"
+         "bash workflow/scripts/get_sra_metadata.sh"
 
 
  # SRA RunSelectir metadata (must be downloaded first)
-rule get_n_process_sraruntable:  
+rule process_metadata:  
     input:
-        runmetadata=expand("data/metadata/{bioproject}.csv", bioproject=config["bioproject"]),
+        metadata=expand("data/metadata/{bioproject}_metadata.csv", bioproject=config["bioproject"]),
     output:
         tidy=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
     script:
         "scripts/process_sraruntable.R"       
-
-
-# Demo merging sraruntable and esearch metadata
-rule merge_metadata:
-    input:
-        tidy=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
-        runinfo=rules.fetch_sra_runinfo.output,
-    output:
-        metadata=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]),
-    script:
-        "scripts/merge_metadata.R"
-
-
-# Process RunInfo metadata
-rule user_optional_filtering:
-    input:
-        fullmeta=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]), 
-    output:
-        amp="data/metadata/metadata_16S.csv",
-        wgs="data/metadata/metadata_WGS.csv",
-    script:
-        "scripts/select_runinfo.R"
         
 # Get SRA accessions, the first column of metadata
 rule extract_accessions:
     input:
-        runinfo=expand("data/metadata/runinfo_{bioproject}.csv", bioproject=config["bioproject"]),
-        runmetadata=expand(rules.get_n_process_sraruntable.output, bioproject=config["bioproject"]),
-        metadata=expand("data/metadata/{bioproject}_full_metadata.csv", bioproject=config["bioproject"]),
+        runmetadata=expand(rules.process_metadata.output, bioproject=config["bioproject"]),
     output:
         runacc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
     script:
@@ -89,7 +64,7 @@ rule extract_accessions:
 # Get variable barplot
 rule get_variable_freq:
     input:
-        runmetadata=expand(rules.get_n_process_sraruntable.output, bioproject=config["bioproject"]),
+        runmetadata=expand(rules.process_metadata.output, bioproject=config["bioproject"]),
     output:
         png=expand("images/{bioproject}_variable_freq.png", bioproject=["PRJNA477349", "PRJNA685168"]),
         svg=expand("images/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349", "PRJNA685168"]),
@@ -119,109 +94,6 @@ rule plot_sampling_points:
         "scripts/get_sample_gps.R"
 
 
-
-
-
-# # # Dowload the SRA RUN reads
-# # rule download_sra_reads: 
-# #     input:
-# #         sra_acc=rules.extract_accessions.output.sra_acc,
-# #     output:
-# #         "data/reads/{sample}_{sraNum}.fastq",
-# #     params:
-# #         outdir=OUTDIR,
-# #         temp=TEMP,
-# #     threads: 1
-# #     shell:
-# #         """
-# #         fasterq-dump \
-# #         --split-3 --force \
-# #         --skip-technical {wildcards.sample} \
-# #         --outdir {params.outdir} \
-# #         --temp {params.temp} \
-# #         --threads {threads}
-# #         """
-
-# # # Subset a test data
-# # rule seqkit_subset_fastq:
-# #     input:
-# #         expand("data/reads/{accession}_1.fastq", accession=ACCESSIONS),
-# #         expand("data/reads/{accession}_2.fastq", accession=ACCESSIONS),
-# #     output:
-# #         "data/test/{accession}_1_sub.fastq",
-# #         "data/test/{accession}_2_sub.fastq",
-# #     threads: 1
-# #     shell:
-# #         """
-# #         bash workflow/scripts/subset_fastq.sh
-# #         """
-
-
-# # rule seqkit_simple_stats:
-# #     input:
-# #         script="workflow/scripts/seqkit_stat_1.sh",
-# #         rawreads=expand("data/reads/{accession}_{sraNum}.fastq", accession=ACCESSIONS, sraNum=config["sraNum"]),
-# #     output:
-# #         seqkit1="results/stats1/seqkit_stats.txt",
-# #     threads: 1
-# #     shell:
-# #       "bash {input.script}"
-
-
-# # rule mothur_mapping_file:
-# #     input:
-# #         stats1="results/stats1/seqkit_stats.txt"
-# #     output:
-# #         files="data/metadata/mothur_mapping_file.tsv",
-# #     threads: 1
-# #     script:
-# #       "scripts/mothur_mapping_file.R"
-
-
-# # rule mothur_design_file:
-# #     input:
-# #         files="data/metadata/mothur_mapping_file.tsv",
-# #     output:
-# #         files="data/metadata/mothur_design_file.tsv",
-# #     threads: 1
-# #     script:
-# #       "scripts/mothur_design_file.R"
-
-# # # Downloading and formatting SILVA and RDP reference databases. The v4 region is extracted from 
-# # # SILVA database for use as reference alignment.
-# # rule mothur_references:
-# # 	input:
-# # 		script="workflow/scripts/mothurReferences.sh"
-# # 	output:
-# # 		silvaV4="data/mothur/references/silva.v4.align",
-# # 		rdpFasta="data/mothur/references/trainset16_022016.pds.fasta",
-# # 		rdpTax="data/mothur/references/trainset16_022016.pds.tax"
-# # 	conda:
-# # 		"envs/mothur.yaml"
-# # 	shell:
-# # 		"bash {input.script}"
-
-
-# # # Downloading the Zymo mock sequence files and extracting v4 region for error estimation.
-# # rule mothur_zymo_mock:
-# # 	input:
-# # 		script="workflow/scripts/mothurMock.sh",
-# # 		silvaV4="data/mothur/references/silva.v4.align",
-# # 	output:
-# # 		mockV4="data/mothur/references/zymo.mock.16S.v4.fasta"
-# # 	conda:
-# # 		"envs/mothur.yaml"
-# # 	shell:
-# # 		"bash {input.script}"
-
-
-# # rule gather_bioinfo_resources:
-# #     shell:
-# #         """
-# #         bash workflow/scripts/get_bioinfo_resources.sh
-# #         """
-
-
 # Get project tree
 rule project_tree:
     output:
@@ -245,14 +117,13 @@ rule deploy_to_github_pages:
     input:
         script="workflow/scripts/render.R",
         rmd="index.Rmd",
-        # runinfo="data/metadata/runinfo_colnames.csv",
         tree="results/project_tree.txt",
         runselector="images/sra_run_selector.png",
         html2png=rules.static_snakemake_report.output.html2png,
         png=expand("images/{bioproject}_variable_freq.png",  bioproject=["PRJNA477349", "PRJNA685168"]),
         svg=expand("images/{bioproject}_variable_freq.svg",  bioproject=["PRJNA477349", "PRJNA685168"]),
-        # gps=expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
-        # acc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        gps=expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
+        acc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
         asc=expand("results/{bioproject}_read_size_asc.csv", bioproject=config["bioproject"]),
         desc=expand("results/{bioproject}_read_size_desc.csv", bioproject=config["bioproject"]),
     output:
