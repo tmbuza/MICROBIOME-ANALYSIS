@@ -1,0 +1,49 @@
+# Downloading NCBI-SRA metadata
+
+For demo: We will explore more on sample metadata retrieved from four randomly selected microbiome BioProjects, including: 
+
+1. [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349): 16S: rRNA from bushmeat samples collected from Tanzania Metagenome
+2. [PRJNA802976](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA802976): 16S: Changes to Gut Microbiota following Systemic Antibiotic Administration in Infants
+3. [PRJNA322554](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA937707): 16S: The Early Infant Gut Microbiome Varies In Association with a Maternal High-fat Diet
+4. [PRJNA937707](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA642411): 16S: Exploring methods for manipulating both the composition and genomic content of bacteria in the mouse gut
+
+
+## Manually via SRA `Run Selector`
+Sample metadata available in SRA database can be retrieved manually via the `SRA Run Selector`. 
+
+- Note that the SRA filename for metadata is automatically named SraRunTable.txt.
+- Users have the option to change the default TXT extension to like CSV.
+- In our demo we will use CSV save the metadata file in `data/metdata/` folder.
+
+![Example screen shot of SRA Run Selector for metadata associated with the NCBI-SRA bioproject number PRJNA477349](images/sra_run_selector.png){#runselector}
+
+
+## Computationally via `Entrez Direct` scripts
+```bash
+#!/bin/bash
+
+esearch -db sra -query 'PRJNA477349[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA477349_metadata.csv;
+
+esearch -db sra -query 'PRJNA802976[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA802976_metadata.csv;
+
+esearch -db sra -query 'PRJNA322554[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA322554_metadata.csv;
+
+esearch -db sra -query 'PRJNA937707[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA937707_metadata.csv;
+```
+
+## Computationally using `pysradb` function
+```bash
+#!/bin/bash
+
+pysradb metadata --saveto data/metadata/pysradb_PRJNA477349_metadata.csv --detailed srp_id PRJNA477349 
+
+pysradb metadata --saveto data/metadata/pysradb_PRJNA802976_metadata.csv --detailed srp_id PRJNA802976 
+
+pysradb metadata --saveto data/metadata/pysradb_PRJNA322554_metadata.csv --detailed srp_id PRJNA322554
+
+pysradb metadata --saveto data/metadata/pysradb_PRJNA937707_metadata.csv --detailed srp_id PRJNA937707 
+```
+
+
+
+

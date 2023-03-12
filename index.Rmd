@@ -1,7 +1,7 @@
 ---
-title:  "<big><u>IMAP-PART 02</u></big><br><br>Exploring and profiling metagenomic sample metadata<br><br>"
+title:  "<big><u>IMAP-PART 02</u></big><br><br>Exploring microbiome sample metadata downloaded from NCBI-SRA Database<br><br>"
 subtitle: |
-  | ![](images/metadata.png)<br>
+  | ![](images/geeks.png)<br>
   | Fostering Reproducible Microbiome data Analysis with Snakemake workflow
 date:
 - IMAP-PART 01<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-sample-metadata/)<br>
@@ -58,171 +58,44 @@ knitr::opts_chunk$set(
 library(tidyverse, suppressPackageStartupMessages())
 library(schtools)
 ```
-
-# General Overview
-
-## What is metadata?
-- <b>Metadata</b> is a set of data that describes and provides information about other data. It is commonly defined as **data about data**.
-- **Sample metadata** described in this book refers to the description and context of the individual sample collected for a specific microbiome study.
-
-<br>
-
-## Metadata structure
-- Metadata collected at different stages are typically organized in an Excel or Google spreadsheet where:
-  - The metadata table columns represent the properties of the samples.
-  - The table rows contain information associated with the samples.
-  - Typically, the first column of sample metadata is Sample ID, which designates the key associated to individual sample
-  - Sampl ID must be unique.
-
-<br>
-
-## Embedded metadata
-- In most cases, you will find the metadata detached from the experimental data.
-- Embedded metadata integrates the experimental data especially for graphics.
-- Major microbiome analysis platforms require sample metadata, commonly referred to as **mapping file** when performing downstream analysis.
-
-<br>
-<br>
-
-# Explore SRA metadata
-
-## Downloading SRA metadata
-- Via SRA Run Selector
-- Via Entrez Direct
-- Using pysradb
-
-For demo: We will explore more on sample metadata retrieved from four randomly selected microbiome BioProjects, including: 
-
-1. [PRJNA477349](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA477349): 16S: rRNA from bushmeat samples collected from Tanzania Metagenome
-2. [PRJNA802976](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA802976): 16S: Changes to Gut Microbiota following Systemic Antibiotic Administration in Infants
-3. [PRJNA685168](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA685168): WGS: Multi-omics suggest diverse mechanisms for response to biologic therapies in IBD
-4. [PRJEB21612](https://www.ncbi.nlm.nih.gov/sra/?term=PRJEB21612): WGS: Alterations of the gut microbiome in hypertension
-
-## Using SRA Run Selector
-Metadata associated with a specific project can be retrieved manually via the `SRA Run Selector` or using the Entrez Direct (edirect) scipts. 
-
-- Note that the SRA filename for metadata is automatically named SraRunTable.txt, but for clarity we will provide a filename corresponding to the NCBI-BioProject ID with `.CSV` extension.
-- We will save the metadata file in `data/metdata/` folder.
-
-<br>
-
-![Example screen shot of SRA Run Selector for metadata associated with the NCBI-SRA bioproject number PRJNA477349](images/sra_run_selector.png){#runselector}
-
-<br>
-
-### Explore top 1and bottom columns in each project
-```{r}
-library(tidyverse, suppressPackageStartupMessages())
-
-PRJNA477349 <- read_csv("data/metadata/PRJNA477349_metadata.csv", show_col_types = FALSE)
-colnames(PRJNA477349) %>% as.data.frame %>% head(5)
-colnames(PRJNA477349) %>% as.data.frame %>% tail(5)
-paste("There are", dim(PRJNA477349)[1], "rows and", dim(PRJNA477349)[2],"columns in PRJNA477349 metadata")
-
-PRJNA802976 <- read_csv("data/metadata/PRJNA802976_metadata.csv", show_col_types = FALSE)
-colnames(PRJNA802976) %>% as.data.frame %>% head(5)
-colnames(PRJNA802976) %>% as.data.frame %>% tail(5)
-paste("There are", dim(PRJNA802976)[1], "rows and", dim(PRJNA802976)[2],"columns in PRJNA802976 metadata")
-
-PRJNA685168 <- read_csv("data/metadata/PRJNA685168_metadata.csv", show_col_types = FALSE)
-colnames(PRJNA685168) %>% as.data.frame %>% head(5)
-colnames(PRJNA685168) %>% as.data.frame %>% tail(5)
-paste("There are", dim(PRJNA685168)[1], "rows and", dim(PRJNA685168)[2],"columns in PRJNA685168 metadata")
-
-PRJEB21612 <- read_csv("data/metadata/PRJEB21612_metadata.csv", show_col_types = FALSE)
-colnames(PRJEB21612) %>% as.data.frame %>% head(5)
-colnames(PRJEB21612) %>% as.data.frame %>% tail(5)
-paste("There are", dim(PRJEB21612)[1], "rows and", dim(PRJEB21612)[2],"columns in PRJEB21612 metadata")
+<!-- Main contents -->
+```{r child='workflow/scripts/00_preface_n_intro.Rmd'}
 ```
 
-<br><br>
+<br>
 
-## Downloading via Entrez SRA runinfo 
-- The Entrez direct functionalities provide uniform 47 columns for each bioproject. 
-
-
-
-
+```{r child='workflow/scripts/01_download_sra_metadata.Rmd'}
+```
 
 <br>
 
-> Note: Full metadata, which is bioproject-specific, can manually be downloaded from the SRA database using the RunSelector option as described above [#runselector]:
-
-<br><br>
-
-# Graphical exploration
-
-## Demo with PRJNA477349 metadata
-> The `PRJNA477349` contains latitudes and longitudes information which will enable dropping pins on collection sites.
-
-
-<br>
-
-Frequency of variables
-
-![](images/PRJNA477349_variable_freq.svg)
-
-<br><br>
-
-Sampling points
-
-![](images/PRJNA477349_gps.png)
-<br><br>
-
-## Demo with PRJNA685168 metadata
-> The `PRJNA685168` is an IBD study in relation to responses to biologic therapies, it contains sex and age features.
-
-<br>
-
-Frequency of variables
-
-![](images/PRJNA685168_variable_freq.svg)
-
-<br><br>
-
-## Demo with PRJNA802976 metadata
-> The `PRJNA802976` is gut microbiota study in relation to changes following systemic Antibiotic Administration in Infants.
-
-<br>
-
-Sampling points
-
-![](images/PRJNA802976_gps.png)
-
-<br><br>
-
-## Demo with PRJEB21612 metadata
-> The `PRJEB21612` is an hypertension study in relation alterations of the gut microbiome.
-
-<br>
-
-Sampling points
-
-![](images/PRJEB21612_gps.png)
+```{r child='workflow/scripts/02_explore_sra_metadata.Rmd'}
+```
 
 
 <br><hr width=100%><br>
 
-
 # Related work
 ```{block imaprepos, echo=TRUE}
 
-| Repo | Description | Summary |
-|--------------|----------------------------------|--------------|
-| [IMAP-PART1](https://github.com/tmbuza/imap-basic-requirements/) | Getting started with microbiome data analysis | [GH-Pages](https://tmbuza.github.io/imap-basic-requirements/) |
-| [IMAP-PART2](https://github.com/tmbuza/imap-sample-metadata/) | Exploring and profiling microbiome sample metadata | [GH-Pages](https://tmbuza.github.io/imap-sample-metadata/) |
-| [IMAP-PART3](https://github.com/tmbuza/imap-bioinformatics-analysis/) | Bioinformatics analysis of microbiome data | [GH-Pages](https://tmbuza.github.io/imap-bioinformatics-analysis/) |
-| [IMAP-PART4](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
-| [IMAP-PART5](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
-| [IMAP-PART6](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
-| [IMAP-PART7](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
-| [IMAP-PART8](https://github.com/tmbuza//) |  | [GH-Pages](https://tmbuza.github.io//) |
+| Repo | Description | Status |
+|:-----------------------|----------------------------------|--------------:|
+| [IMAP-PART 01](https://github.com/tmbuza/imap-software-requirements/) | Installing software to get started with microbiome data analysis with Snakemake workflows | [In-progress](https://tmbuza.github.io/imap-software-requirements/) |
+| [IMAP-PART 02](https://github.com/tmbuza/imap-sample-metadata/) | Exploring microbiome sample metadata downloaded from NCBI-SRA Database | [In-progress](https://tmbuza.github.io/imap-sample-metadata/) |
+| [IMAP-PART 03](https://github.com/tmbuza/imap-download-sra-reads/) | How to download microbiome sequencing reads from NCBI-SRA Database | [In-progress](https://tmbuza.github.io/imap-download-sra-reads/) |
+| [IMAP-PART 04](https://github.com/tmbuza/imap-read-quality-control/) | Quality Control of Microbiome Next Generation Sequencing Reads | [In-progress](https://tmbuza.github.io/imap-read-quality-control/) |
+| [IMAP-PART 05](https://github.com/tmbuza/imap-bioinformatics-analysis/) | Bioinformatics & classification of preprocessed microbiome sequencing data | [In-progress](https://tmbuza.github.io/imap-bioinformatics-analysis/) |
+| [IMAP-PART 06](https://github.com/tmbuza//) |  | [In-progress](https://tmbuza.github.io//) |
+| [IMAP-PART 07](https://github.com/tmbuza//) |  | [In-progress](https://tmbuza.github.io//) |
+| [IMAP-PART 08](https://github.com/tmbuza//) |  | [In-progress](https://tmbuza.github.io//) |
 ```
 
 
 ## Citation
 
 > Please consider citing the iMAP article [@TMBuza2019] if you find any part of the IMAP practical user guides helpful in your microbiome data analysis.
+
+<br>
 
 # References
 ::: {#refs}
@@ -233,30 +106,26 @@ Sampling points
 # Appendix {-}
 
 ## Project main tree
-```{bash, include=FALSE, eval=FALSE}
+```{bash, include=FALSE}
+mamba install -c conda-forge tree
 bash workflow/scripts/tree.sh
 ```
 
-```{bash treeimg, eval=FALSE}
+```{bash treeimg}
 cat results/project_tree.txt
 ```
 
 ## Screenshot of interactive snakemake report {#smkreport}
-> The interactive snakemake html report can be viewed by opening the `report.html` using any compartible browser. You will be able to explore the workflow and the associated statistics. You will also be able to close the left bar to get a better wider view of the display.
+> The interactive snakemake HTML report can be viewed by opening the `report.html` using any compatible browser. You will be able to explore the workflow and the associated statistics. You can close the left bar to get a more expansive display view.
 
 ```{bash smkrpt, include=FALSE}
 snakemake --unlock;
 snakemake --report report.html;
+pip install html2image
 hti -H report.html -o images/smkreport;
 ```
 
-```{bash staticsmk, include=FALSE}
-snakemake --report report.html
-bash workflow/scripts/smk_html_report.sh
-```
-
 <img src="images/smkreport/screenshot.png">
-
 
 ## Troubleshooting of FAQs
 <ol>
@@ -276,4 +145,5 @@ Last updated on `r format(Sys.time(), '%B %d, %Y')`.<br>
 Github_Repo: `r rmarkdown::metadata$github_repo`.<br>
 Repo compiled and maintained by: [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`). 
 </div>
+
 

@@ -1,0 +1,17 @@
+# Explore microbiome sample metadata
+
+
+## Variable frequencies example
+
+![](images/PRJNA477349_variable_freq.svg)
+
+<br>
+
+## Sampling locations
+
+![](images/sample_gps.png)
+
+<br>
+
+
+

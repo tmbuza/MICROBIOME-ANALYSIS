@@ -25,49 +25,40 @@ if not os.path.exists(OUTDIR):
 # Master rule for controlling workflow.
 rule all:
     input:
-        expand("data/metadata/{bioproject}_metadata.csv", bioproject=config["bioproject"]),
         expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
-        expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        expand("results/{bioproject}_srarun_accessions.txt", bioproject=config["bioproject"]),
+        expand("images/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349"]),
         expand("results/{bioproject}_read_size_asc.csv", bioproject=config["bioproject"]),
         expand("results/{bioproject}_read_size_desc.csv", bioproject=config["bioproject"]),
-        expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
+        "results/sample_location.csv",
+        "images/sample_gps.png",
         "index.html",
 
-# Fetch SRRunInfo directly (incode)
-rule get_sra_metadata:
-    output:
-        # runinfo=expand("data/me{bioproject}.csv", bioproject=config["bioproject"]),
-        pysradb=expand("data/metadata/{bioproject}_metadata.csv", bioproject=config["bioproject"]),
-        # pysradb_=expand("data/metadata/{bioproject}_metadata_.csv", bioproject=config["bioproject"]),
-    shell:
-         "bash workflow/scripts/get_sra_metadata.sh"
 
-
- # SRA RunSelectir metadata (must be downloaded first)
-rule process_metadata:  
+rule process_srarun_metadata:  
     input:
-        metadata=expand("data/metadata/{bioproject}_metadata.csv", bioproject=config["bioproject"]),
+        metadata=expand("data/metadata/{bioproject}_SraRunTable.csv", bioproject=config["bioproject"]),
     output:
         tidy=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
     script:
         "scripts/process_sraruntable.R"       
-        
-# Get SRA accessions, the first column of metadata
-rule extract_accessions:
+
+
+rule extract_srarun_accessions:
     input:
-        runmetadata=expand(rules.process_metadata.output, bioproject=config["bioproject"]),
+        runmetadata=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
     output:
-        runacc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        runacc=expand("results/{bioproject}_srarun_accessions.txt", bioproject=config["bioproject"]),
     script:
         "scripts/get_run_accessions.py"
 
 # Get variable barplot
-rule get_variable_freq:
+rule plot_variable_freq:
     input:
-        runmetadata=expand(rules.process_metadata.output, bioproject=config["bioproject"]),
+        runmetadata=expand("data/metadata/{bioproject}_SraRunTable.csv", bioproject=["PRJNA477349"]),
     output:
-        png=expand("images/{bioproject}_variable_freq.png", bioproject=["PRJNA477349", "PRJNA685168"]),
-        svg=expand("images/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349", "PRJNA685168"]),
+        png=expand("images/{bioproject}_variable_freq.png", bioproject=["PRJNA477349"]),
+        svg=expand("images/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349"]),
     script:
         "scripts/plot_var_freq.R"
 
@@ -83,15 +74,24 @@ rule explore_read_size:
         "scripts/explore_read_size.R"
 
 
+# Get sample location data
+rule get_location_data:
+    input:
+        metadata=expand("data/metadata/{bioproject}_SraRunTable.csv", bioproject=config["bioproject"]),
+    output:
+        samloc="results/sample_location.csv",
+    script:
+        "scripts/get_sample_location_data.R"
+
 
 # Get sample location 
 rule plot_sampling_points:
     input:
-        expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
+        samloc="results/sample_location.csv",
     output:
-        gps=expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
+        gps="images/sample_gps.png"
     script:
-        "scripts/get_sample_gps.R"
+        "scripts/mark_sampling_points.R"
 
 
 # Get project tree
@@ -120,12 +120,11 @@ rule deploy_to_github_pages:
         tree="results/project_tree.txt",
         runselector="images/sra_run_selector.png",
         html2png=rules.static_snakemake_report.output.html2png,
-        png=expand("images/{bioproject}_variable_freq.png",  bioproject=["PRJNA477349", "PRJNA685168"]),
-        svg=expand("images/{bioproject}_variable_freq.svg",  bioproject=["PRJNA477349", "PRJNA685168"]),
-        gps=expand("images/{bioproject}_gps.png", bioproject=["PRJNA477349", "PRJNA802976", "PRJEB21612"]),
-        acc=expand("results/{bioproject}_sra_accessions.txt", bioproject=config["bioproject"]),
+        acc=expand("results/{bioproject}_srarun_accessions.txt", bioproject=config["bioproject"]),
+        svgfreq=expand("images/{bioproject}_variable_freq.svg", bioproject=["PRJNA477349"]),
         asc=expand("results/{bioproject}_read_size_asc.csv", bioproject=config["bioproject"]),
         desc=expand("results/{bioproject}_read_size_desc.csv", bioproject=config["bioproject"]),
+        samgps="images/sample_gps.png",
     output:
         doc="index.html",
     shell:
