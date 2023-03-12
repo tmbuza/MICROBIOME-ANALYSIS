@@ -1,13 +1,14 @@
 # Explore microbiome sample metadata
 
 
-## Variable frequencies example
+## Exploring variable relationships
 
 ![](images/PRJNA477349_variable_freq.svg)
 
 <br>
 
-## Sampling locations
+## Locating sampling points on map
+> Dropping pins on the map is posible if you have coordinate data, the latitudes and longitude of collection points.
 
 ![](images/sample_gps.png)
 

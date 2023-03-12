@@ -18,3 +18,4 @@
 - Major microbiome analysis platforms require sample metadata, commonly referred to as **mapping file** when performing downstream analysis.
 
 
+Next, we will start learning how to download metadata from SRA database.

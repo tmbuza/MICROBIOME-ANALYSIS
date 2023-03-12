@@ -5,7 +5,7 @@ subtitle: |
   | Fostering Reproducible Microbiome data Analysis with Snakemake workflow
 date:
 - IMAP-PART 01<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-sample-metadata/)<br>
-- Updated on `r Sys.Date()`
+- Updated on `r Sys.time()`
 author: Teresia Mrema-Buza
 output: 
   html_document: 
@@ -70,6 +70,11 @@ library(schtools)
 <br>
 
 ```{r child='workflow/scripts/02_explore_sra_metadata.Rmd'}
+```
+
+<br>
+
+```{r next}
 ```
 
 
@@ -145,5 +150,4 @@ Last updated on `r format(Sys.time(), '%B %d, %Y')`.<br>
 Github_Repo: `r rmarkdown::metadata$github_repo`.<br>
 Repo compiled and maintained by: [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`). 
 </div>
-
 

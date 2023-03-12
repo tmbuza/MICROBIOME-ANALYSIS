@@ -8,7 +8,7 @@ read_csv("data/metadata/PRJNA477349_tidy_metadata.csv", show_col_types = FALSE) 
   ggplot(aes(x = isolate, y = mb_bases, fill = ecosystem)) +
   geom_col(position = "dodge") +
   coord_flip() +
-  labs(x = "Animal Name", y = "Read size (milion bases)") +
+  labs(x = "Isolate Source", y = "Read size (milion bases)", fill="Ecosystem") +
   theme_light()
 
 ggsave(file="images/PRJNA477349_variable_freq.png", width=10, height=10)
