@@ -101,6 +101,14 @@ rule plot_sampling_points:
     script:
         "scripts/mark_sampling_points.R"
 
+# Get dot rule graphs
+rule dot_rules_graph:
+	output:
+		"dags/rulegraph.svg",
+		"dags/rulegraph.png",
+	shell:
+		"bash workflow/scripts/rules_dag.sh"
+
 
 # Get project tree
 rule project_tree:
@@ -133,6 +141,7 @@ rule deploy_to_github_pages:
         asc=expand("results/{bioproject}_read_size_asc.csv", bioproject=config["bioproject"]),
         desc=expand("results/{bioproject}_read_size_desc.csv", bioproject=config["bioproject"]),
         samgps="images/sample_gps.png",
+        rules="dags/rulegraph.png",
     output:
         doc="index.html",
     shell:
