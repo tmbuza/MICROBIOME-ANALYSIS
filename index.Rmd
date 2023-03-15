@@ -119,8 +119,8 @@ bash workflow/scripts/tree.sh
 cat results/project_tree.txt
 ```
 
-## Screenshot of interactive snakemake report {#smkreport}
-> The interactive snakemake HTML report can be viewed by opening the `report.html` using any compatible browser. You will be able to explore the workflow and the associated statistics. You can close the left bar to get a more expansive display view.
+## Screenshot of interactive snakemake report {#smkstats}
+> The interactive snakemake HTML report can be viewed by opening the `report.html` using any compatible browser. You will be able to explore the workflow and the associated statistics [#smk-statistics]. You can close the left bar to get a more expansive display view.
 
 ```{bash smkrpt, include=FALSE}
 snakemake --unlock;
@@ -128,6 +128,14 @@ snakemake --report report.html;
 pip install html2image
 hti -H report.html -o images/smkreport;
 ```
+
+## Snakemake statistics [#smkstats]
+![Rule creation time](images/analysis_statistics.svg)
+
+<br>
+
+![Rule creation time](images/analysis_statistics.svg)
+
 
 <img src="images/smkreport/screenshot.png">
 

@@ -2,7 +2,7 @@
 
 
 ## Read size
-The size of the reas can tell us how big is the dataset and can help us to estimate the computational needs.
+The size of the reads can tell us how big is the dataset and can help to estimate the computational needs.
 
 ### Top five smallest project by read size
 ```{r}
