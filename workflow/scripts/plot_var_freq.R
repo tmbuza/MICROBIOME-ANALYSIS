@@ -1,15 +1,25 @@
-# Script: imap-sample-metadata/workflow/scripts/plot_var_freq.R
-
-# NCBI BioProject PRJNA477349: Bushmeat multispecies
 library(tidyverse, suppressPackageStartupMessages())
+
+read_csv("data/metadata/metadata.csv", show_col_types = FALSE) %>% 
+  rename_all(tolower) %>% 
+  ggplot(aes(x = bioproject, y = bases/1E6, fill = bioproject)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  labs(x = "NCBI BioProject", y = "Read size (milion bases)", fill="BioProject") +
+  theme_light()
+
+ggsave(file="images/read_size.png", width=10, height=10)
+ggsave(file="images/read_size.svg", width=10, height=10)
+
+
 
 read_csv("data/metadata/PRJNA477349_tidy_metadata.csv", show_col_types = FALSE) %>% 
   rename_all(tolower) %>% 
-  ggplot(aes(x = isolate, y = mb_bases, fill = ecosystem)) +
+  ggplot(aes(x = isolate, y = bases/1E6, fill = ecosystem)) +
   geom_col(position = "dodge") +
   coord_flip() +
-  labs(x = "Isolate Source", y = "Read size (milion bases)", fill="Ecosystem") +
+  labs(x = "PRJNA477349 BioProject", y = "Read size (milion bases)", fill="Ecosystem") +
   theme_light()
 
-ggsave(file="images/PRJNA477349_variable_freq.png", width=10, height=10)
-ggsave(file="images/PRJNA477349_variable_freq.svg", width=10, height=10)
+ggsave(file="images/PRJNA477349_read_size.png", width=10, height=10)
+ggsave(file="images/PRJNA477349_read_size.svg", width=10, height=10)
