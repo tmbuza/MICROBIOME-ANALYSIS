@@ -25,5 +25,3 @@
 ![Tentative snakemake workflow](dags/rulegraph.svg)
 
 <br>
-
-Next, we will start practicing how to download metadata from SRA database.

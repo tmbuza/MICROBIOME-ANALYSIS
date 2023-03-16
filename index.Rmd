@@ -57,9 +57,20 @@ knitr::opts_chunk$set(
 library(tidyverse, suppressPackageStartupMessages())
 library(schtools)
 ```
-<!-- Main contents -->
+
+# IMAP Project Structure
+
+> Note: This structure shows the basic folders and their content. Some folders or files may be removed or add new ones accordingly.
+
+```{bash, echo=FALSE}
+cat reports/imap_tree_template.txt
+```
+
+<br>
+
 ```{r child='workflow/scripts/00_preface_n_intro.Rmd'}
 ```
+
 
 <br>
 
@@ -109,7 +120,7 @@ library(schtools)
 
 # Appendix {-}
 
-## Project main tree
+## Final project tree
 ```{bash, include=FALSE}
 mamba install -c conda-forge tree
 bash workflow/scripts/tree.sh
@@ -119,25 +130,12 @@ bash workflow/scripts/tree.sh
 cat results/project_tree.txt
 ```
 
-## Screenshot of interactive snakemake report {#smkstats}
+## Screenshot of snakemake html report {#smkstats}
 > The interactive snakemake HTML report can be viewed by opening the `report.html` using any compatible browser. You will be able to explore the workflow and the associated statistics [#smk-statistics]. You can close the left bar to get a more expansive display view.
 
-```{bash smkrpt, include=FALSE}
-snakemake --unlock;
-snakemake --report report.html;
-pip install html2image
-hti -H report.html -o images/smkreport;
-```
-
-## Snakemake statistics [#smkstats]
-![Rule creation time](images/analysis_statistics.svg)
+![](images/smk_static_report.png)
 
 <br>
-
-![Rule creation time](images/analysis_statistics.svg)
-
-
-<img src="images/smkreport/screenshot.png">
 
 ## Troubleshooting of FAQs
 <ol>
