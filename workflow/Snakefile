@@ -2,21 +2,38 @@ from snakemake.utils import min_version
 
 min_version("6.10.0")
 
+
 # Configuration file containing all user-specified settings
 configfile: "config/config.yaml"
+
+
+report: "report/workflow.rst"
+
+import os
+import csv
+import pandas as pd
+
+BIOPROJ=pd.read_csv('data/metadata/metadata.csv').bioproject.unique().tolist()
 
 # Master rule for controlling workflow.
 rule all:
     input:
-        "config/samples.tsv",
-        "config/units.tsv",
-        "reports/smk_report.html",
-        "reports/analysis_report.html",
         "index.html",
 
-rule download_sra_metadata:  
+
+rule get_bioproj_accessions: 
     output:
-        entresefetch=expand("data/metadata/{bioproject}_runinfo.csv", bioproject=config["bioproject"]),
+        bioproj=BIOPROJ
+    shell:
+        """
+        echo "Getting BioProject accessions"
+        """
+
+rule download_bioproj_metadata:
+    input:
+        bioproj=expand("data/metadata/{bioproject}", bioproject=config["bioproject"]),
+    output:
+        esearch=expand("data/metadata/{bioproject}_runinfo.csv", bioproject=config["bioproject"]),
         pysradb=expand("data/metadata/{bioproject}_pysradb.csv", bioproject=config["bioproject"]),
     shell:
         "bash workflow/scripts/download_sra_metadata.sh" 
@@ -33,8 +50,9 @@ rule process_sra_metadata:
         "scripts/process_sraruntable.R" 
 
 # Merged project metadata
-rule merge_proj_metadata:
+rule merge_bioproj_metadata:
     input:
+        esearch=expand("data/metadata/{bioproject}_runinfo.csv", bioproject=config["bioproject"]),    
         meta=expand(rules.process_sra_metadata.output, bioproject=config["bioproject"]),
         tidymeta=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
     output:
@@ -70,8 +88,10 @@ rule plot_read_size:
         asc="results/read_size_asc.csv",
         desc="results/read_size_desc.csv"
     output:
-        svg="images/read_size.svg",
         png="images/read_size.png",
+        svg=report("images/read_size.svg", caption="report/readsize.rst", category="Read size"),
+        varpng="images/PRJNA477349_read_size.png",
+        varsvg=report("images/PRJNA477349_read_size.svg", caption="report/var.rst", category="Variable bars"),
     script:
         "scripts/plot_var_freq.R"
 
@@ -82,7 +102,7 @@ rule plot_sampling_points:
     input:
         metadata="data/metadata/metadata.csv",
     output:
-        gps="images/sample_gps.png"
+        gps=report("images/sample_gps.png", caption="report/gps.rst", category="Sampling GPS"),
     script:
         "scripts/plot_sampling_points.R"
 
@@ -115,34 +135,24 @@ rule static_smk_report:
         bash workflow/scripts/smk_html_report.sh
         """
 
-rule create_read_size_report:
-    input:
-        sizeasc="results/read_size_asc.csv",
-        sizedecs="results/read_size_desc.csv",
-        svg="images/read_size.svg",
-        png="images/read_size.png",
-    output:
-        html="reports/analysis_report.html"
-    run:
-        from snakemake.utils import report
-        import os
-        import sys
-        import csv
-        import pandas as pd
+# rule create_read_size_report:
+#     input:
+#         sizeasc="results/read_size_asc.csv",
+#         sizedecs="results/read_size_desc.csv",
+#     output:
+#         html="reports/analysis_report.html"
+#     run:
+#         from snakemake.utils import report
+#         import os
+#         import sys
+#         import csv
+#         import pandas as pd
 
-        report(
-            """
-            Project run with smallest read size (see T1) and highest run read size (see T2)
-            """, 
-            output[0], T1=input[0], T2=input[1])
-
-
-rule get_jobs_runtime_report:
-    output:
-        "reports/smk_report.html",
-    shell:
-        "bash workflow/scripts/smk_job_runtime.json"
-
+#         report(
+#             """
+#             Project run with smallest read size (see T1) and highest run read size (see T2)
+#             """, 
+#             output[0], T1=input[0], T2=input[1])
 
 
 rule deploy_to_github_pages:

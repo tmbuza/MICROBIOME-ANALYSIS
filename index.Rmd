@@ -63,7 +63,7 @@ library(schtools)
 > Note: This structure shows the basic folders and their content. Some folders or files may be removed or add new ones accordingly.
 
 ```{bash, echo=FALSE}
-cat reports/imap_tree_template.txt
+cat ../global/imap_tree_template.txt
 ```
 
 <br>
@@ -122,7 +122,6 @@ cat reports/imap_tree_template.txt
 
 ## Final project tree
 ```{bash, include=FALSE}
-mamba install -c conda-forge tree
 bash workflow/scripts/tree.sh
 ```
 
