@@ -1,35 +1,33 @@
-# Explore sample metadata
+## Exploring sample metadata
 
-
-## Read size
+### Read size
 The size of the reads can tell us how big is the dataset and can help to estimate the computational needs.
 
-### Top five smallest project by read size
+Top five smallest project by read size
 ```{r}
 read_csv("../../results/read_size_asc.csv", show_col_types = FALSE) %>% 
 head(5)
 ```
 
-### Top five highest project by read size
+Top five highest project by read size
 ```{r}
 read_csv("../../results/read_size_desc.csv", show_col_types = FALSE) %>% 
 head(5)
 ```
 
-## Graphical comparizon
+### Compare read size by BioProject
 
-### BioProjects by read size
 ![](images/read_size.svg)
 
 <br>
 
-### Variables by read size
+### Compare read size by variables
 
 ![](images/PRJNA477349_read_size.svg)
 
 <br>
 
-## Project sampling points
+## Explore project sampling points
 > Dropping pins on the map is posible if you have coordinate data, the latitudes and longitude of collection points.
 > By hovering on the pin you will be able to see the corresponding project, when viewed interactively.
 

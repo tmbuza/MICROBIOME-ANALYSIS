@@ -18,10 +18,3 @@
 - Major microbiome analysis platforms require sample metadata, commonly referred to as **mapping file** when performing downstream analysis.
 
 
-## Snakemake workflow rules
-
-<br>
-
-![Tentative snakemake workflow](dags/rulegraph.svg)
-
-<br>

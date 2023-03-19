@@ -14,8 +14,11 @@ import pandas as pd
 # print(UNITS)
 
 
-METADATA=pd.read_csv('data/metadata/metadata.csv')
+# METADATA=pd.read_csv('data/metadata/metadata.csv')
 # ACCESSIONS=METADATA['run'].tolist() # Specify the column containing the accession, in this demo is Run
 
-BIOPROJECT=METADATA.bioproject.unique()
-print(BIOPROJECT)
+BIOPROJ=pd.read_csv('data/metadata/metadata.csv').bioproject.unique().tolist()
+print(BIOPROJ)
+
+with open('data/metadata/bioproj_accessions.txt', 'w') as f:
+    print(BIOPROJ, file=f)

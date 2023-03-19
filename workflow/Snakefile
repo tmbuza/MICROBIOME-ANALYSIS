@@ -13,36 +13,21 @@ import os
 import csv
 import pandas as pd
 
+
 BIOPROJ=pd.read_csv('data/metadata/metadata.csv').bioproject.unique().tolist()
+
+with open('data/metadata/bioproj_accessions.txt', 'w') as f:
+    print(BIOPROJ, file=f)
+
 
 # Master rule for controlling workflow.
 rule all:
     input:
         "index.html",
 
-
-rule get_bioproj_accessions: 
-    output:
-        bioproj=BIOPROJ
-    shell:
-        """
-        echo "Getting BioProject accessions"
-        """
-
-rule download_bioproj_metadata:
+# Process SraRunTable
+rule process_downloaded_sra_metadata:  
     input:
-        bioproj=expand("data/metadata/{bioproject}", bioproject=config["bioproject"]),
-    output:
-        esearch=expand("data/metadata/{bioproject}_runinfo.csv", bioproject=config["bioproject"]),
-        pysradb=expand("data/metadata/{bioproject}_pysradb.csv", bioproject=config["bioproject"]),
-    shell:
-        "bash workflow/scripts/download_sra_metadata.sh" 
-
-
-rule process_sra_metadata:  
-    input:
-        esearch=expand("data/metadata/{bioproject}_runinfo.csv", bioproject=config["bioproject"]),
-        pysradb=expand("data/metadata/{bioproject}_pysradb.csv", bioproject=config["bioproject"]),
         metadata=expand("data/metadata/{bioproject}_SraRunTable.csv", bioproject=config["bioproject"]),
     output:
         tidymeta=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
@@ -52,8 +37,6 @@ rule process_sra_metadata:
 # Merged project metadata
 rule merge_bioproj_metadata:
     input:
-        esearch=expand("data/metadata/{bioproject}_runinfo.csv", bioproject=config["bioproject"]),    
-        meta=expand(rules.process_sra_metadata.output, bioproject=config["bioproject"]),
         tidymeta=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
     output:
         mergedmeta="data/metadata/metadata.csv",
@@ -175,51 +158,25 @@ rule deploy_to_github_pages:
         """
 
 
-# snakemake --report report.html
-# snakemake --report report.html --report-stylesheet custom-stylesheet.css
-# snakemake fig1.svg --report report-short.html
+
+
+
+
+
 # report: "report/workflow.rst"
 
 
 # rule all:
 #     input:
-#         ["fig1.svg", "fig2.png", "testdir"]
+#         ["images/read_size.svg", "images/sample_gps.png", "testdir"]
 
-
-# rule c:
-#     output:
-#         "test.{i}.out"
-#     singularity:
-#         "docker://continuumio/miniconda3:4.4.10"
-#     conda:
-#         "envs/test.yaml"
-#     shell:
-#         "sleep `shuf -i 1-3 -n 1`; touch {output}"
-
-
-# rule a:
-#     input:
-#         expand("test.{i}.out", i=range(10))
-#     output:
-#         report("fig1.svg", caption="report/fig1.rst", category="Step 1")
-#     shell:
-#         "sleep `shuf -i 1-3 -n 1`; cp data/fig1.svg {output}"
-
-
-# rule b:
-#     input:
-#         expand("{model}.{i}.out", i=range(10))
-#     output:
-#         report("fig2.png", caption="report/fig2.rst", category="Step 2", subcategory="{model}")
-#     shell:
-#         "sleep `shuf -i 1-3 -n 1`; cp data/fig2.png {output}"
-
-# rule d:
+# rule forloop:
 #     output:
 #         report(
 #             directory("testdir"),
 #             patterns=["{name}.txt"],
 #             caption="report/somedata.rst",
-#             category="Step 3")
-#     shell:
-#         "mkdir {output}; for i in 1 2 3; do echo $i > {output}/$i.txt; done"
+#             category="Step 3", 
+#             subcategory="{Explore}")
+#         shell:
+#             "mkdir {output}; for i in 1 2 3, 4; do echo $i > {output}/$i.txt; done"

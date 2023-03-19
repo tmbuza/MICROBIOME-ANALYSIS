@@ -1,4 +1,4 @@
-# How to Download NCBI-SRA metadata
+## Downloading NCBI-SRA metadata
 Different methods exist for downloading sample metadata deposited in the Sequence Read Archive (SRA) or the European Nucleotide Archive (ENA). Each process yields slightly different information, so it is an ideal habit to explore which method gives you what suits you best.
 For demo: We will explore more on sample metadata retrieved from four randomly selected microbiome BioProjects, including: 
 
@@ -9,7 +9,7 @@ For demo: We will explore more on sample metadata retrieved from four randomly s
 5. [PRJNA589182](https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA589182): 16S rDNA gene sequencing of the phyllosphere endophytic bacterial communities colonizing wild (Multispecies).
 
 
-## Manually via SRA `Run Selector`
+### Manually via SRA `Run Selector`
 We can manually retrieve metadata from the SRA database via the `SRA Run Selector`. 
 
 - Note that the SRA filename for metadata is automatically named SraRunTable.txt.
@@ -19,7 +19,7 @@ We can manually retrieve metadata from the SRA database via the `SRA Run Selecto
 ![Example screen shot of SRA Run Selector for metadata associated with the NCBI-SRA bioproject number PRJNA477349](images/sra_run_selector.png){#runselector}
 
 
-## Computationally via `Entrez Direct`
+### Computationally via `Entrez Direct`
 ```bash
 #!/bin/bash
 
@@ -30,9 +30,9 @@ esearch -db sra -query 'PRJNA937707[bioproject]' | efetch -format runinfo >data/
 esearch -db sra -query 'PRJNA589182[bioproject]' | efetch -format runinfo >data/metadata/runinfo_PRJNA589182_metadata.csv;
 ```
 
-## Computationally using `pysradb`
+### Computationally using `pysradb`
 
-### Create pysradb environment
+#### Create pysradb environment
 The `pysradb` tool can obtain metadata from SRA and ENA. Here we will create an independent environment and install pysradb. We can delete this env when no longer needed.
 To learn more [click here](https://saket-choudhary.me/pysradb/quickstart.html).
 
@@ -44,7 +44,7 @@ conda activate base
 conda create -c bioconda -n pysradb PYTHON=3 pysradb
 ```
 
-### Using a `bash` script
+#### Using a `bash` script
 ```bash
 #!/bin/bash
 # Shell script: workflow/scripts/pysradb_sra_metadata.sh
@@ -56,9 +56,7 @@ pysradb metadata PRJNA937707 --detailed >data/metadata/PRJNA937707_pysradb.csv
 pysradb metadata PRJNA589182 --detailed >data/metadata/PRJNA589182_pysradb.csv
 ```
 
-### Using a `python` script
-- We can download SRA metadata using python via the SRAweb like so:
-
+#### Using a `python` script
 ```python
 # Python script: workflow/scripts/pysradb_sra_metadata.py
 
