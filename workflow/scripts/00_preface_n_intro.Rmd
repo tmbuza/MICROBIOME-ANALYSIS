@@ -1,4 +1,3 @@
-# Microbiome Sample metadata
 ## What is metadata?
 - <b>Metadata</b> is a set of data that describes and provides information about other data. It is commonly defined as **data about data**.
 - **Sample metadata** described here refers to the description and context of the individual sample collected for a specific microbiome study.

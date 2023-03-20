@@ -1,4 +1,4 @@
-Snakemake workflow for downloading SRA metadata::
+**Snakemake workflow for downloading and exploring SRA metadata**::
 
     This workflow  performs the following:
         - Downloads sample metadata from SRA database.

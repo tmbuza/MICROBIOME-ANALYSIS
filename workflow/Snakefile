@@ -72,9 +72,9 @@ rule plot_read_size:
         desc="results/read_size_desc.csv"
     output:
         png="images/read_size.png",
-        svg=report("images/read_size.svg", caption="report/readsize.rst", category="Read size"),
+        svg=report("images/read_size.svg", caption="reports/readsize.rst", category="Read size"),
         varpng="images/PRJNA477349_read_size.png",
-        varsvg=report("images/PRJNA477349_read_size.svg", caption="report/var.rst", category="Variable bars"),
+        varsvg=report("images/PRJNA477349_read_size.svg", caption="reports/var.rst", category="Variable bars"),
     script:
         "scripts/plot_var_freq.R"
 
@@ -85,7 +85,7 @@ rule plot_sampling_points:
     input:
         metadata="data/metadata/metadata.csv",
     output:
-        gps=report("images/sample_gps.png", caption="report/gps.rst", category="Sampling GPS"),
+        gps=report("images/sample_gps.png", caption="reports/gps.rst", category="Sampling GPS"),
     script:
         "scripts/plot_sampling_points.R"
 
@@ -175,7 +175,7 @@ rule deploy_to_github_pages:
 #         report(
 #             directory("testdir"),
 #             patterns=["{name}.txt"],
-#             caption="report/somedata.rst",
+#             caption="reports/somedata.rst",
 #             category="Step 3", 
 #             subcategory="{Explore}")
 #         shell:
