@@ -1,8 +1,9 @@
-# config.yaml
+# BioProjects selected for demo
 
-# Path to sample sheet (TSV format, columns: sample_name, condition, ...)
-samples: config/samples.tsv
-
-# Path to sequencing unit sheet (TSV format, columns: sample_name, unit, fq1, fq2)
-units: config/units.tsv
-
+bioproject:
+  - PRJNA477349
+  - PRJNA802976
+  - PRJNA322554
+  - PRJNA937707
+  - PRJNA589182
+  - PRJEB13870

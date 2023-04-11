@@ -1,1 +1,0 @@
-Example of variable distribution and relationship.

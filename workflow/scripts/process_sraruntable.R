@@ -17,7 +17,7 @@ read_csv("data/metadata/PRJNA477349_SraRunTable.csv", show_col_types = FALSE) %>
   select(run, bioproject, ecosystem, isolate, latitude, longitude, bases, description) %>%
   write_csv("data/metadata/PRJNA477349_tidy_metadata.csv")
 
-
+library(tidyverse)
 read_csv("data/metadata/PRJNA802976_SraRunTable.csv", show_col_types = FALSE) %>%  
   rename_all(tolower) %>%
   select_if(~sum((!is.na(.))) > 0) %>%
@@ -30,7 +30,7 @@ read_csv("data/metadata/PRJNA802976_SraRunTable.csv", show_col_types = FALSE) %>
   select(run, bioproject, latitude, longitude, bases) %>% 
   write_csv("data/metadata/PRJNA802976_tidy_metadata.csv")
 
-
+library(tidyverse)
 read_csv("data/metadata/PRJNA322554_SraRunTable.csv", show_col_types = FALSE) %>%  
   rename_all(tolower) %>%
   select_if(~sum((!is.na(.))) > 0) %>%
@@ -43,7 +43,7 @@ read_csv("data/metadata/PRJNA322554_SraRunTable.csv", show_col_types = FALSE) %>
   select(run, bioproject, body_site, latitude, longitude, bases) %>% 
   write_csv("data/metadata/PRJNA322554_tidy_metadata.csv")
 
-
+library(tidyverse)
 read_csv("data/metadata/PRJNA937707_SraRunTable.csv", show_col_types = FALSE) %>%  
   rename_all(tolower) %>%
   select_if(~sum((!is.na(.))) > 0) %>%
@@ -57,7 +57,7 @@ read_csv("data/metadata/PRJNA937707_SraRunTable.csv", show_col_types = FALSE) %>
   select(run, bioproject, isolation_source, latitude, longitude, bases) %>% 
   write_csv("data/metadata/PRJNA937707_tidy_metadata.csv")
  
-
+library(tidyverse)
 read_csv("data/metadata/PRJNA589182_SraRunTable.csv", show_col_types = FALSE) %>%  
   rename_all(tolower) %>%
   rename(lat_lon = "lat-lon") %>%
@@ -71,3 +71,46 @@ read_csv("data/metadata/PRJNA589182_SraRunTable.csv", show_col_types = FALSE) %>
   # mutate(bases = round(bases/1E6, digits = 0)) %>% 
   select(run, bioproject, replicate, latitude, longitude, bases) %>% 
   write_csv("data/metadata/PRJNA589182_tidy_metadata.csv")
+ 
+library(tidyverse)
+read_csv("data/metadata/PRJEB13870_SraRunTable.csv", show_col_types = FALSE) %>%  
+  rename_all(tolower) %>%
+  rename(latitude = "geographic_location_(latitude)") %>%
+  rename(longitude = "geographic_location_(longitude)") %>%
+  filter(bioproject=="PRJEB13870") %>%
+  select_if(~sum((!is.na(.))) > 0) %>% 
+  mutate(
+    latitude = str_replace_all(latitude, " N$", ""),
+    longitude = str_replace_all(longitude, "116. 3 E$", "116.3")) %>%
+  select_if(~sum((!is.na(.))) > 0) %>% 
+  # mutate(bases = round(bases/1E6, digits = 0)) %>% 
+  select(run, bioproject, latitude, longitude, bases) %>% 
+  write_csv("data/metadata/PRJEB13870_tidy_metadata.csv")
+
+library(tidyverse)
+read_csv("data/metadata/PRJNA208226_SraRunTable.csv", show_col_types = FALSE) %>%  
+  rename(latitude = "GPS_Latitute_S") %>%
+  rename(longitude = "GPS_Longitude_W") %>%
+  rename_all(tolower) %>%
+  filter(bioproject=="PRJNA208226") %>%
+  select_if(~sum((!is.na(.))) > 0) %>% 
+  mutate(
+    latitude = str_replace_all(latitude, "\\.*'$", ""),
+    latitude = str_replace_all(latitude, "\\.*_$", ""),
+    latitude = str_replace_all(latitude, "\\.", ""),
+    latitude = str_replace_all(latitude, " o ", "."),
+    latitude = str_replace_all(latitude, "o ", "."),
+    latitude = as.numeric(latitude) * -1) %>% 
+  mutate(
+    longitude = str_replace_all(longitude, "\\.*'$", ""),
+    longitude = str_replace_all(longitude, "\\.*_$", ""),
+    longitude = str_replace_all(longitude, "\\.", ""),
+    longitude = str_replace_all(longitude, " o ", "."),
+    longitude = str_replace_all(longitude, "o ", "."),
+    longitude = str_replace_all(longitude, "^0", ""),
+    longitude = as.numeric(longitude) * -1) %>% 
+  select_if(~sum((!is.na(.))) > 0) %>% 
+  # mutate(bases = round(bases/1E6, digits = 0)) %>% 
+  select(run, bioproject, locname = "sample_location_full_name", latitude, longitude, bases) %>% 
+  mutate(locname = str_replace_all(locname, "Cha\\?aral", "Chanaral")) %>% 
+  write_csv("data/metadata/PRJNA208226_tidy_metadata.csv")

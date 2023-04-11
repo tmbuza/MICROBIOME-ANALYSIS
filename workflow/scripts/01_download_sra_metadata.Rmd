@@ -90,15 +90,14 @@ df.to_csv('data/metadata/PRJNA589182_pysradb_metadata.csv', index=False)
 > I sometimes experience ConnectionError when using python method. Try a different method if that happens.
 
 
-### Querying SRA or ENA with a keyword
+### Example querying SRA or ENA with a keyword
 > Using keywords to search any extensive database helps filter user-specified information, such as certain disease-related studies. 
 
 ```bash
 #!/bin/bash
+mamba install -c bioconda pysradb
 
 pysradb search --db sra -q Amplicon --max 100 >sra_amplicon_studies.csv
 
 pysradb search --db ena -q Amplicon --max 100 >ena_amplicon_studies.csv
 ```
-
-Next, we will explore downloaded metadata to learn more about the various features represented.

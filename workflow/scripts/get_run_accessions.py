@@ -37,3 +37,16 @@ ACCESSIONS=METADATA['run'].tolist()
 
 with open('results/PRJNA589182_srarun_accessions.txt', 'w') as f:
     print(ACCESSIONS, file=f)
+
+
+METADATA=pd.read_csv('data/metadata/PRJEB13870_tidy_metadata.csv').loc[0:3]
+ACCESSIONS=METADATA['run'].tolist()
+
+with open('results/PRJEB13870_srarun_accessions.txt', 'w') as f:
+    print(ACCESSIONS, file=f)
+
+METADATA=pd.read_csv('data/metadata/PRJNA208226_tidy_metadata.csv').loc[0:3]
+ACCESSIONS=METADATA['run'].tolist()
+
+with open('results/PRJNA208226_srarun_accessions.txt', 'w') as f:
+    print(ACCESSIONS, file=f)

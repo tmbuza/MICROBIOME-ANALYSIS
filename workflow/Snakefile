@@ -4,10 +4,8 @@ min_version("6.10.0")
 
 
 # Configuration file containing all user-specified settings
-configfile: "config/config.yaml"
+configfile: "config/config.yml"
 
-
-report: "report/workflow.rst"
 
 import os
 import csv
@@ -20,163 +18,18 @@ with open('data/metadata/bioproj_accessions.txt', 'w') as f:
     print(BIOPROJ, file=f)
 
 
-# Master rule for controlling workflow.
+report: "report/workflow.rst"
+
+include: "rules/sample_metadata.smk"
+include: "rules/create_mapping_files.smk"
+include: "rules/rmd_report.smk"
+
+
+
 rule all:
     input:
+        "config/samples.tsv",
+        "images/read_size.svg",
+        "images/sample_gps.png",
+        "images/smkreport/screenshot.png",
         "index.html",
-
-# Process SraRunTable
-rule process_downloaded_sra_metadata:  
-    input:
-        metadata=expand("data/metadata/{bioproject}_SraRunTable.csv", bioproject=config["bioproject"]),
-    output:
-        tidymeta=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
-    script:
-        "scripts/process_sraruntable.R" 
-
-# Merged project metadata
-rule merge_bioproj_metadata:
-    input:
-        tidymeta=expand("data/metadata/{bioproject}_tidy_metadata.csv", bioproject=config["bioproject"]),
-    output:
-        mergedmeta="data/metadata/metadata.csv",
-    script:
-        "scripts/merge_proj_metadata.R"
-
-
-rule create_mapping_files:  
-    input:
-        metadata="data/metadata/metadata.csv"
-    output:
-        samples="config/samples.tsv",
-        units="config/units.tsv",
-    script:
-        "scripts/samples_units_metadata.R"     
- 
-
-# Get read size
-rule create_read_size_table:
-    input:
-        "data/metadata/metadata.csv",
-    output:
-        asc="results/read_size_asc.csv",
-        desc="results/read_size_desc.csv"
-    script:
-        "scripts/explore_read_size.R"
-
-
-# Get variable barplot
-rule plot_read_size:
-    input:
-        asc="results/read_size_asc.csv",
-        desc="results/read_size_desc.csv"
-    output:
-        png="images/read_size.png",
-        svg=report("images/read_size.svg", caption="reports/readsize.rst", category="Read size"),
-        varpng="images/PRJNA477349_read_size.png",
-        varsvg=report("images/PRJNA477349_read_size.svg", caption="reports/var.rst", category="Variable bars"),
-    script:
-        "scripts/plot_var_freq.R"
-
-
-
-# Get sample location 
-rule plot_sampling_points:
-    input:
-        metadata="data/metadata/metadata.csv",
-    output:
-        gps=report("images/sample_gps.png", caption="reports/gps.rst", category="Sampling GPS"),
-    script:
-        "scripts/plot_sampling_points.R"
-
-
-# Get dot rule graphs
-rule dot_rules_graph:
-	output:
-		"dags/rulegraph.svg",
-		"dags/rulegraph.png",
-	shell:
-		"bash workflow/scripts/rules_dag.sh"
-
-
-# Get project tree
-rule project_tree:
-    output:
-        tree="results/project_tree.txt"
-    shell:
-        """
-        bash workflow/scripts/tree.sh
-        """
-
-# Get smk static report
-rule static_smk_report:
-    output:
-        smkhtml="report.html",
-        html2png="images/smkreport/screenshot.png"
-    shell:
-        """
-        bash workflow/scripts/smk_html_report.sh
-        """
-
-# rule create_read_size_report:
-#     input:
-#         sizeasc="results/read_size_asc.csv",
-#         sizedecs="results/read_size_desc.csv",
-#     output:
-#         html="reports/analysis_report.html"
-#     run:
-#         from snakemake.utils import report
-#         import os
-#         import sys
-#         import csv
-#         import pandas as pd
-
-#         report(
-#             """
-#             Project run with smallest read size (see T1) and highest run read size (see T2)
-#             """, 
-#             output[0], T1=input[0], T2=input[1])
-
-
-rule deploy_to_github_pages:
-    input:
-        script="workflow/scripts/render.R",
-        rmd="index.Rmd",
-        tree="results/project_tree.txt",
-        runselector="images/sra_run_selector.png",
-        html2png="images/smkreport/screenshot.png",
-        readsize="images/read_size.svg",
-        samgps="images/sample_gps.png",
-        rules="dags/rulegraph.svg",
-        # asc="results/read_size_asc.csv",
-        # desc="results/read_size_desc.csv",
-    output:
-        doc="index.html",
-    shell:
-        """
-        R -e "library(rmarkdown); render('{input.rmd}')"
-        """
-
-
-
-
-
-
-
-# report: "report/workflow.rst"
-
-
-# rule all:
-#     input:
-#         ["images/read_size.svg", "images/sample_gps.png", "testdir"]
-
-# rule forloop:
-#     output:
-#         report(
-#             directory("testdir"),
-#             patterns=["{name}.txt"],
-#             caption="reports/somedata.rst",
-#             category="Step 3", 
-#             subcategory="{Explore}")
-#         shell:
-#             "mkdir {output}; for i in 1 2 3, 4; do echo $i > {output}/$i.txt; done"

@@ -9,7 +9,7 @@ read_csv("../../results/read_size_asc.csv", show_col_types = FALSE) %>%
 head(5)
 ```
 
-Top five highest project by read size
+Top five biggest project by read size
 ```{r}
 read_csv("../../results/read_size_desc.csv", show_col_types = FALSE) %>% 
 head(5)
@@ -21,9 +21,13 @@ head(5)
 
 <br>
 
-### Compare read size by variables
+### Read size by variables within a project
 
 ![](images/PRJNA477349_read_size.svg)
+
+<br>
+
+![](images/PRJNA208226_read_size.svg)
 
 <br>
 
