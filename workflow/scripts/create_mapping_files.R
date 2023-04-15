@@ -1,13 +1,36 @@
 library(tidyverse, suppressPackageStartupMessages())
 
-read_csv("data/metadata/PRJNA208226_tidy_metadata.csv", show_col_types = FALSE) %>%  
-  rename_all(tolower) %>% 
-  select(sample_name = run, condition = locname) %>% 
-  write_tsv("config/samples.tsv")
 
-read_csv("data/metadata/PRJNA208226_tidy_metadata.csv", show_col_types = FALSE) %>%  
+if (!dir.exists("config")) {dir.create("config")}
+if (!dir.exists("resources")) {dir.create("resources")}
+if (!dir.exists("resources/metadata")) {dir.create("resources/metadata")}
+
+samples <- read_csv("data/metadata/metadata.csv", show_col_types = FALSE) %>%  
   rename_all(tolower) %>% 
-  select(sample_name = run, condition = locname, latitude, longitude) %>% 
-  mutate(latitude=round(latitude, 3)) %>% 
-  mutate(longitude=round(longitude, 3)) %>% 
+  filter(bioproject != "PRJNA477349", bioproject !="PRJEB13870") %>% 
+  filter(bases >100000) %>% 
+  filter(librarylayout == "PAIRED") %>% 
+  
+  select(sample_name = run, bioproject)
+
+samples %>% 
+  filter()
+  write_tsv(samples, "config/samples.tsv")
+
+metadata <- left_join(samples, read_csv("data/metadata/metadata.csv", show_col_types = FALSE), by=c(sample_name = "run", bioproject = "bioproject")) %>%  
+  rename_all(tolower) %>% 
+  mutate(unit_name="NA", .after=sample_name,
+         fq1="NA",
+         fq2="NA",
+         sra=sample_name,
+         adapters="NA") %>% 
+  arrange(bases)
+
+metadata %>%
+  select(1:6) %>% 
   write_tsv("config/units.tsv")
+
+
+metadata %>%
+  write_tsv("resources/metadata/metadata.tsv")
+

@@ -20,7 +20,11 @@ with open('data/metadata/bioproj_accessions.txt', 'w') as f:
 
 report: "report/workflow.rst"
 
-include: "rules/sample_metadata.smk"
+include: "rules/process_tidy_metadata.smk"
+include: "rules/merge_bioproj_metadata.smk"
+include: "rules/read_size_table.smk"
+include: "rules/plot_var_read_freq.smk"
+include: "rules/plot_sampling_map.smk"
 include: "rules/create_mapping_files.smk"
 include: "rules/rmd_report.smk"
 
@@ -28,7 +32,12 @@ include: "rules/rmd_report.smk"
 
 rule all:
     input:
-        "config/samples.tsv",
+        "config/pe_samples.tsv",
+        "config/se_samples.tsv",
+        "config/pe_units.tsv",
+        "config/se_units.tsv",
+        "resources/metadata/pe_metadata.tsv",
+        "resources/metadata/se_metadata.tsv",
         "images/read_size.svg",
         "images/sample_gps.png",
         "images/smkreport/screenshot.png",
